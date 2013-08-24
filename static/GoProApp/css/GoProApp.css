@@ -1,0 +1,29 @@
+
+.camera-list small {
+    color: #aaa;
+}
+
+.camera-list th:first-child {
+    width: 20px;
+}
+
+.status {
+  display: inline-block;
+}
+
+.status::after {
+  content: '\0020';
+  display: block;
+  width: 12px;
+  height: 12px;
+  background-color: transparent;
+  border-radius: 50%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.35), 0 1px 0 rgba(255,255,255, 1);
+}
+
+.status.status-on::after { background-color: #60BA47; }
+.status.status-recording::after { background-color: #DE2F2F; }
+.status.status-off::after { background-color: #fc5; }
+.status.status-notfound::after { background-color: #aaa; }

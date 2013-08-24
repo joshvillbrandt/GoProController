@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}
+GoProApp - Preview
+{% endblock title %}
+
+{% block extra_head %}
+        <link href="{{ STATIC_URL }}GoProApp/css/GoProApp.css" rel="stylesheet">
+{% endblock extra_head %}
+
+{% block content %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Cameras</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table camera-list">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Battery</th>
+                    <th>Last Update</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if camera_set %}
+                {% for camera in camera_set %}
+                    <tr>
+                        <td><span class="status status-recording"></td>
+                        <td><a href="#">{{ camera.name }}</a> <small title="{{ camera.ssid }}:{{ camera.password }}">({{ camera.ssid }})</small></td>
+                    <td>85%</td>
+                    <td>67 seconds ago</td>
+                    </tr>
+                {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="4">No cameras in database.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+        <!--<a class="btn btn-default" href="#">Add Camera</a>-->
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+        <script src="{{ STATIC_URL }}GoProApp/js/GoProApp.js"></script>
+{% endblock extra_js %}
