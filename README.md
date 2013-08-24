@@ -16,4 +16,8 @@ Then add this app to the site.
     cd GoProSite
     git clone https://github.com/joshvillbrandt/GoProApp.git
 
-Once you have added the app, add it to your INSTALLED_APPS list in your projects settings.py file. Then add a line to include the GoProApp urls.py file inyour projects urls.py file. Finally, run `python manage.py syncdb` to install the models.
+Once you have added the app, add it to your INSTALLED_APPS list in your projects settings.py file. Then add a line to include the GoProApp urls.py file in your projects urls.py file like this:
+
+    url(r'^', include('GoProApp.urls', namespace="GoProApp")),
+
+Finally, run `python manage.py syncdb` to install the models.
