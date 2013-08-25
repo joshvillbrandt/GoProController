@@ -4,20 +4,6 @@
 # Josh Villbrandt <josh@javconcepts.com>
 # 8/24/2013
 
-
-# # import django settings
-# import os, sys
-# sys.path.append('var/sites/GoProSite/')
-# os.environ['DJANGO_SETTINGS_MODULE'] = 'GoProSite.settings'
-# from ..GoProSite import settings
-# 
-# # process django settings
-# from django.core.management import setup_environ
-# setup_environ(settings)
-# 
-# # import django models
-# from GoProApp.models import Camera
-
 # import django settings
 import os, sys
 sys.path.append('/var/sites/GoProSite/')
