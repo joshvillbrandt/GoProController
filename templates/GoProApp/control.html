@@ -18,6 +18,7 @@ GoProApp - Control
         <a class="btn btn-default" href="#">Record Off</a>
         <a class="btn btn-default" href="#">Camera On</a>
         <a class="btn btn-default" href="#">Camera Off</a>
+        <a class="btn btn-default" href="#">Video Mode</a>
     </div>
 </div>
 
@@ -26,7 +27,7 @@ GoProApp - Control
         <h3 class="panel-title">Queued Commands</h3>
     </div>
     <div class="panel-body">
-        <table class="table camera-list">
+        <table class="table camera-list table-condensed">
             <tbody>
                 <tr id="command-1" class="success">
                     <td><a href="#">camera1</a></td>
@@ -49,6 +50,8 @@ GoProApp - Control
                 <tr>
                     <th></th>
                     <th>Name</th>
+                    <th>Mode</th>
+                    <th>Free Space</th>
                     <th>Battery</th>
                     <th>Last Update</th>
                 </tr>
@@ -57,20 +60,28 @@ GoProApp - Control
                 {% if camera_set %}
                 {% for camera in camera_set %}
                     <tr id="camera-{{ camera.id }}">
-                        <td><span class="status status-recording"></td>
+                        <td><span class="status status-{{ camera.status.summary }}" title="camera is {{ camera.status.summary }}"></td>
                         <td><a href="#">{{ camera.name }}</a> <small title="{{ camera.ssid }}:{{ camera.password }}">({{ camera.ssid }})</small></td>
-                        <td>85%</td>
-                        <td>67 seconds ago</td>
+                        <td>{% if camera.status.mode == "video" %}{{ camera.status.mode }}: {{ camera.status.res }}, {{ camera.status.fps }}fps, {{ camera.status.fov }} fov{% else %}{{ camera.status.mode }}{% endif %}</td>
+                        <td>?</td>
+                        <td>{{ camera.status.batt }}%</td>
+                        <td>{{ camera.last_update|timesince }}</td>
                     </tr>
                 {% endfor %}
                 {% else %}
                     <tr>
-                        <td colspan="4">No cameras in database.</td>
+                        <td colspan="6">No cameras in database.</td>
                     </tr>
                 {% endif %}
             </tbody>
         </table>
         <!--<a class="btn btn-default" href="#">Add Camera</a>-->
+    </div>
+    <div class="panel-footer">
+        <span class="status status-notfound"></span> not found,
+        <span class="status status-off"></span> off,
+        <span class="status status-on"></span> on,
+        <span class="status status-recording"></span> recording
     </div>
 </div>
 {% endblock main_content %}

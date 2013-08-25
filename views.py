@@ -2,11 +2,16 @@ from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.core.urlresolvers import reverse
 from GoProApp.models import *
+import json
 
 # Create your views here.
 
 def control(request):
     camera_set = Camera.objects.all().order_by('name')
+    
+    for camera in camera_set:
+        camera.status = json.loads(camera.status)
+        
     context = {
         'active_nav': 'control',
         'camera_set': camera_set

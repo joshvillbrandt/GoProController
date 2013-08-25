@@ -27,3 +27,8 @@
 .status.status-recording::after { background-color: #DE2F2F; }
 .status.status-off::after { background-color: #fc5; }
 .status.status-notfound::after { background-color: #aaa; }
+
+.panel-footer {
+    font-size: 80%;
+    font-style: italic;
+}
