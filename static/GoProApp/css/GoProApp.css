@@ -3,7 +3,7 @@
     color: #aaa;
 }
 
-.camera-list th:first-child {
+.camera-list td:first-child {
     width: 20px;
 }
 

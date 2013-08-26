@@ -4,13 +4,17 @@ from GoProApp.models import *
 # Register your models here
 
 # For more information on this file, see
-# https://docs.djangoproject.com/en//intro/tutorial02/
+# https://docs.djangoproject.com/en/dev/intro/tutorial02/
 
-# class ChoiceInline(admin.StackedInline):
-#     model = Choice
-#     extra = 3
+class CameraCommandInline(admin.StackedInline):
+    model = CameraCommand
+    fields = ['command', 'time_requested', 'time_completed']
+    extra = 0
  
-#class PollAdmin(admin.ModelAdmin):
-    #inlines = [ChoiceInline]
+class CameraAdmin(admin.ModelAdmin):
+    fields = ['name', 'ssid', 'password', 'status', 'last_attempt', 'last_update']
+    inlines = [CameraCommandInline]
  
-admin.site.register(Camera)
+admin.site.register(Camera, CameraAdmin)
+
+admin.site.register(CameraCommand)

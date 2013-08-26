@@ -14,11 +14,11 @@ GoProApp - Control
         <h3 class="panel-title">Group Control</h3>
     </div>
     <div class="panel-body">
-        <a class="btn btn-default" href="#">Record On</a>
-        <a class="btn btn-default" href="#">Record Off</a>
-        <a class="btn btn-default" href="#">Camera On</a>
-        <a class="btn btn-default" href="#">Camera Off</a>
-        <a class="btn btn-default" href="#">Video Mode</a>
+        <a class="btn btn-default gopro-sendcommand" gopro-camera="all" gopro-command="record_on" href="#">Record On</a>
+        <a class="btn btn-default gopro-sendcommand" gopro-camera="all" gopro-command="record_off" href="#">Record Off</a>
+        <a class="btn btn-default gopro-sendcommand" gopro-camera="all" gopro-command="power_on" href="#">Camera On</a>
+        <a class="btn btn-default gopro-sendcommand" gopro-camera="all" gopro-command="power_off" href="#">Camera Off</a>
+        <a class="btn btn-default gopro-sendcommand" gopro-camera="all" gopro-command="mode_video" href="#">Video Mode</a>
     </div>
 </div>
 
@@ -27,25 +27,28 @@ GoProApp - Control
         <h3 class="panel-title">Queued Commands</h3>
     </div>
     <div class="panel-body">
-        <table class="table camera-list table-condensed">
-            <tbody>
-                <tr id="command-1" class="success">
-                    <td><a href="#">camera1</a></td>
-                    <td>record: off</td>
-                </tr>
+        <table class="table table-condensed table-striped">
+            <tbody class="command-list">
             </tbody>
         </table>
+    </div>
+    <div class="panel-footer">
+        avg cmd delay: 90 seconds
     </div>
 </div>
 {% endblock sidebar_content %}
 
 {% block main_content %}
+<div class="alert alert-danger manager-failed" style="display:none">
+    <strong>Warning!</strong> Lost sync with the server. Please refresh browser.
+</div>
+
 <div class="panel panel-default">
     <div class="panel-heading">
         <h3 class="panel-title">Cameras</h3>
     </div>
     <div class="panel-body">
-        <table class="table camera-list">
+        <table class="table">
             <thead>
                 <tr>
                     <th></th>
@@ -56,23 +59,7 @@ GoProApp - Control
                     <th>Last Update</th>
                 </tr>
             </thead>
-            <tbody>
-                {% if camera_set %}
-                {% for camera in camera_set %}
-                    <tr id="camera-{{ camera.id }}">
-                        <td><span class="status status-{{ camera.status.summary }}" title="camera is {{ camera.status.summary }}"></td>
-                        <td><a href="#">{{ camera.name }}</a> <small title="{{ camera.ssid }}:{{ camera.password }}">({{ camera.ssid }})</small></td>
-                        <td>{% if camera.status.mode == "video" %}{{ camera.status.mode }}: {{ camera.status.res }}, {{ camera.status.fps }}fps, {{ camera.status.fov }} fov{% else %}{{ camera.status.mode }}{% endif %}</td>
-                        <td>?</td>
-                        <td>{{ camera.status.batt }}%</td>
-                        <td>{{ camera.last_update|timesince }}</td>
-                    </tr>
-                {% endfor %}
-                {% else %}
-                    <tr>
-                        <td colspan="6">No cameras in database.</td>
-                    </tr>
-                {% endif %}
+            <tbody class="camera-list">
             </tbody>
         </table>
         <!--<a class="btn btn-default" href="#">Add Camera</a>-->
@@ -87,5 +74,6 @@ GoProApp - Control
 {% endblock main_content %}
 
 {% block extra_js %}
+        <script src="{{ STATIC_URL }}GoProApp/js/SyncedList.js"></script>
         <script src="{{ STATIC_URL }}GoProApp/js/GoProApp.js"></script>
 {% endblock extra_js %}

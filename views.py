@@ -1,6 +1,9 @@
-from django.http import Http404, HttpResponseRedirect, HttpResponse
-from django.shortcuts import get_object_or_404, render
-from django.core.urlresolvers import reverse
+from django.http import HttpResponse #Http404, HttpResponseRedirect, 
+from django.shortcuts import render #get_object_or_404, 
+#from django.core.urlresolvers import reverse
+from django.utils import timezone
+from django.template import RequestContext, loader
+from dateutil import parser
 from GoProApp.models import *
 import json
 
@@ -24,41 +27,79 @@ def preview(request):
     }
     return render(request, 'GoProApp/preview.html', context)
 
-def detail(preview):
-    try:
-        poll = Poll.objects.get(pk=poll_id)
-    except Poll.DoesNotExist:
-        raise Http404
-    context = {
-        'active_nav': 'GoProApp',
-        'poll': poll
-    }
-    return render(request, 'GoProApp/detail.html', context)
-
-def results(request, poll_id):
-    poll = get_object_or_404(Poll, pk=poll_id)
-    context = {
-        'active_nav': 'GoProApp',
-        'poll': poll
-    }
-    return render(request, 'GoProApp/results.html', context)
-
-def vote(request, poll_id):
-    p = get_object_or_404(Poll, pk=poll_id)
-    try:
-        selected_choice = p.choice_set.get(pk=request.POST['choice'])
-    except (KeyError, Choice.DoesNotExist):
-        # Redisplay the poll voting form.
-        return render(request, 'GoProApp/detail.html', {
-            'active_nav': 'GoProApp',
-            'poll': p,
-            'error_message': "You didn't select a choice.",
-        })
-        return detail(request, poll_id)
+def api(request, action = None):
+    response = {}
+    
+    if action == 'updateCameras':
+        response['time'] = str( timezone.now() )
+        
+        # parse input parameters
+        lastUpdate = None
+        if 'last_update' in request.GET:
+            lastUpdate = parser.parse(request.GET['last_update'])
+        
+        # build list
+        camera_set = Camera.objects.all().order_by('name')
+        response['list'] = []
+        template = loader.get_template('GoProApp/control_camera_row.html')
+        for camera in camera_set:
+            data = {}
+            data['id'] = camera.id
+            
+            # only need to send bulk of data if the client hasn't seen this object before
+            if not lastUpdate or (camera.last_attempt is not None and camera.last_attempt >= lastUpdate) or camera.date_added >= lastUpdate:
+                camera.status = json.loads(camera.status)
+                data['html'] = template.render(RequestContext(request, {
+                    'camera': camera,
+                }))
+            
+            response['list'].append(data)
+    
+    elif action == 'updateCommands':
+        response['time'] = str( timezone.now() )
+        
+        # parse input parameters
+        lastUpdate = None
+        if 'last_update' in request.GET:
+            lastUpdate = parser.parse(request.GET['last_update'])
+        
+        # build list
+        command_set = CameraCommand.objects.filter(time_completed__isnull=True).order_by('time_requested')
+        response['list'] = []
+        template = loader.get_template('GoProApp/control_command_row.html')
+        for command in command_set:
+            data = {}
+            data['id'] = command.id
+            
+            # only need to send bulk of data if the client hasn't seen this object before
+            if not lastUpdate or command.date_added >= lastUpdate:
+                data['html'] = template.render(RequestContext(request, {
+                    'command': command,
+                }))
+            
+            response['list'].append(data)
+    
+    elif action == 'sendCommands':
+        commands = json.loads(request.GET['commands'])
+        request_time = timezone.now()
+        
+        for command in commands:
+            try:
+                camera = Camera.objects.get(pk=int(command[0]))
+                c = CameraCommand(camera=camera, command=command[1], time_requested=request_time)
+                c.save()
+            except:
+                pass
+    
+    elif action == 'deleteCommand':
+        command = CameraCommand.objects.get(pk=int(request.GET['command']))
+        command.delete()
+    
+    # prep response for output
+    if 'callback' in request.GET:
+        response = request.GET['callback'] + '(' + json.dumps(response) + ')'
     else:
-        selected_choice.votes += 1
-        selected_choice.save()
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
-        return HttpResponseRedirect(reverse('GoProApp:results', args=(p.id,)))
+        response = json.dumps(response)
+    
+    # send response
+    return HttpResponse(response, content_type="application/json")
