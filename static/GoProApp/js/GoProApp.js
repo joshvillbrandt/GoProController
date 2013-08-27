@@ -109,6 +109,7 @@ $(document).ready(function(){
         $.getJSON('/api/sendCommands/?callback=?', args, function(data, textStatus, jqXHR) {
             commandList.restartTimer();
         });
+        modal.modal('hide');
     });
     
     // bind delete camera

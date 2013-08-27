@@ -44,16 +44,14 @@ def getStatus(camera):
     
     camera.last_attempt = timezone.now()
     status = controller.getStatus(camera.ssid, camera.password)
-    if status['summary'] == 'notfound' or status['summary'] == 'off':
-        # lets keep the history we know about the camera and update the parameters we do know
-        camera.status = json.loads(camera.status)
-        camera.status['summary'] = status['summary']
-        camera.status['power'] = status['power']
-        camera.status = json.dumps(camera.status)
-    else:
-        # on or record
-        camera.status = json.dumps(status)
+    camera.status = json.loads(camera.status)
+    for item in status:
+        camera.status[item] = status[item]
+    if 'power' in status and status['power'] == 'on':
         camera.last_update = camera.last_attempt
+    
+    # save camera
+    camera.status = json.dumps(camera.status)
     camera.save()
 
 # main loop here
