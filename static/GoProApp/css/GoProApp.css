@@ -47,3 +47,11 @@
 body.modal-open, .modal-open .navbar-fixed-top, .modal-open .navbar-fixed-bottom {
     margin-right: 0;
 }
+.raw-group div {
+    font-family: monospace;
+    font-size: 12px;
+}
+
+.raw-group span {
+    color: red;
+}

@@ -1,4 +1,4 @@
-{% extends "base-sidebar.html" %}
+{% extends "base.html" %}
 
 {% block title %}
 GoProApp - Control
@@ -8,46 +8,7 @@ GoProApp - Control
         <link href="{{ STATIC_URL }}GoProApp/css/GoProApp.css" rel="stylesheet">
 {% endblock extra_head %}
 
-{% block sidebar_content %}
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">Group Control</h3>
-    </div>
-    <div class="panel-body camera-group-control">
-        <div class="btn-group">
-            <button type="button" class="btn btn-default" disabled="disabled">Power: </button>
-            <button type="button" class="btn btn-primary gopro-sendcommand" gopro-camera="all" gopro-command="power_on">On</button>
-            <button type="button" class="btn btn-primary gopro-sendcommand" gopro-camera="all" gopro-command="power_off">Off</button>
-        </div>
-        <div class="btn-group">
-            <button type="button" class="btn btn-default" disabled="disabled">Record: </button>
-            <button type="button" class="btn btn-primary gopro-sendcommand" gopro-camera="all" gopro-command="record_on">On</button>
-            <button type="button" class="btn btn-primary gopro-sendcommand" gopro-camera="all" gopro-command="record_off">Off</button>
-        </div>
-        <div class="btn-group">
-            <button type="button" class="btn btn-default" disabled="disabled">Mode: </button>
-            <button type="button" class="btn btn-primary gopro-sendcommand" gopro-camera="all" gopro-command="mode_video">Video</button>
-        </div>
-    </div>
-</div>
-
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">Queued Commands</h3>
-    </div>
-    <div class="panel-body">
-        <table class="table table-condensed table-striped">
-            <tbody class="command-list">
-            </tbody>
-        </table>
-    </div>
-    <div class="panel-footer">
-        avg cmd delay: <span class="cmd-time">?</span> seconds
-    </div>
-</div>
-{% endblock sidebar_content %}
-
-{% block main_content %}
+{% block content %}
 <div class="modal fade" id="camera-modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -138,7 +99,42 @@ GoProApp - Control
         <span class="status status-recording"></span> recording
     </div>
 </div>
-{% endblock main_content %}
+
+<div class="panel panel-default run-raw">
+    <div class="panel-heading">
+        <h3 class="panel-title">Raw Status Viewer</h3>
+    </div>
+    <div class="panel-body">
+        <form role="form">
+            <button type="button" class="btn btn-primary raw-hold-button pull-right">Hold</button>
+            <div class="form-group">
+                <label>bacpac/se</label>
+                <div class="raw-group">
+                    <div class="raw-hold"></div>
+                    <div class="bacpacse"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>camera/sx</label>
+                <div class="raw-group">
+                    <div class="raw-hold"></div>
+                    <div class="camerasx"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>camera/se</label>
+                <div class="raw-group">
+                    <div class="raw-hold"></div>
+                    <div class="camerase"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="panel-footer">
+        Click a camera hyperlink above to trigger the Raw Status Viewer for that camera.
+    </div>
+</div>
+{% endblock content %}
 
 {% block extra_js %}
         <script src="{{ STATIC_URL }}GoProApp/js/SyncedList.js"></script>

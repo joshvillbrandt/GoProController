@@ -11,16 +11,16 @@ import json
 # Create your views here.
 
 def control(request):
-    camera_set = Camera.objects.all().order_by('name')
-    
-    for camera in camera_set:
-        camera.status = json.loads(camera.status)
-        
     context = {
-        'active_nav': 'control',
-        'camera_set': camera_set
+        'active_nav': 'control'
     }
     return render(request, 'GoProApp/control.html', context)
+
+def raw(request):
+    context = {
+        'active_nav': 'raw'
+    }
+    return render(request, 'GoProApp/raw.html', context)
 
 def preview(request):
     context = {
@@ -33,6 +33,7 @@ def api(request, action = None):
     
     if action == 'updateCameras':
         response['time'] = str( timezone.now() )
+        response['extra'] = {}
         
         # parse input parameters
         lastUpdate = None
@@ -47,26 +48,33 @@ def api(request, action = None):
             data = {}
             data['id'] = camera.id
             
+            # send entire json if requested
+            if 'status' in request.GET:
+                data['status'] = camera.status
+            
             # only need to send bulk of data if the client hasn't seen this object before
+            camera.status = json.loads(camera.status)
             if not lastUpdate or (camera.last_attempt is not None and camera.last_attempt >= lastUpdate) or camera.date_added >= lastUpdate:
-                camera.status = json.loads(camera.status)
                 data['html'] = template.render(RequestContext(request, {
                     'camera': camera,
                 }))
                 
             # calculate last update
             data['extra'] = {}
-            diff = timezone.now() - camera.last_update
-            minutes = divmod(diff.days * 86400 + diff.seconds, 60)[0]
-            if minutes > 60:
-                data['extra']['.last-update'] = ">1 hour"
+            if camera.last_update == None:
+                data['extra']['.last-update'] = "never"
             else:
-                data['extra']['.last-update'] = str(minutes) + " minutes"
+                diff = timezone.now() - camera.last_update
+                minutes = divmod(diff.days * 86400 + diff.seconds, 60)[0]
+                if minutes > 60:
+                    data['extra']['.last-update'] = ">1 hour"
+                else:
+                    data['extra']['.last-update'] = str(minutes) + " minutes"
             
+            # push this camera to the reponse
             response['list'].append(data)
         
         # determine proxy health
-        response['extra'] = {}
         camera_set = Camera.objects.filter(last_attempt__gte=timezone.now()-timedelta(seconds=30))
         if len(camera_set) > 0:
             response['extra']['.proxy-health'] = "<span class=\"label label-default\">proxy is alive</span>"

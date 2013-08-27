@@ -75,7 +75,7 @@ SyncedList.prototype = {
                         // run external update item function
                         if(syncer._options.updateItem != undefined) {
                             el = syncer._listParent.find(syncer._options.itemPrefix+item['id']);
-                            syncer._options.updateItem(el);
+                            syncer._options.updateItem(el, item);
                         }
                     }
                     
@@ -102,7 +102,6 @@ SyncedList.prototype = {
                 // process in extra list params
                 if(data.extra != undefined) {
                     for(var key in data.extra) {
-                        console.log(key)
                         $(key).html(data.extra[key]);
                     }
                 }

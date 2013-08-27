@@ -10,6 +10,10 @@
 var cameraList, commandList;
 
 $(document).ready(function(){
+    // variables
+    var updateInterval = 2000;
+    var currentRawCam = -1;
+    
     // grab modal
     var modal = $('#camera-modal');
     
@@ -43,33 +47,47 @@ $(document).ready(function(){
     });
     
     // initialize camera list manager
+    var cameraListURL = '/api/updateCameras/?callback=?';
+    if($('.run-raw').length > 0) cameraListURL += '&status';
     cameraList = new SyncedList({
-        updateURL: '/api/updateCameras/?callback=?',
-        updateInterval: 2000,
+        updateURL: cameraListURL,
+        updateInterval: updateInterval,
         listParentSelector: '.camera-list',
         listErrorSelector: '.manager-failed',
         itemPrefix: '#camera-',
-        updateItem: function(row){
+        updateItem: function(row, data){
             // bind edit camera
             row.find('a').click(function(e){
                 e.preventDefault();
-                var cameraID = row.attr('gopro-camera');
                 modal.find('.modal-title').html(row.find('.camera-name').html());
-                modal.find('[name=pk]').val(cameraID);
+                modal.find('[name=pk]').val(data.id);
                 modal.find('[name=name]').val(row.find('.camera-name').html());
                 modal.find('[name=ssid]').val(row.find('.camera-ssid').html());
                 modal.find('[name=password]').val(row.find('.camera-ssid').attr('title'));
-                modal.find('button').attr('gopro-camera', cameraID);
+                modal.find('button').attr('gopro-camera', data.id);
                 modal.find('.existing-camera').show();
                 modal.modal();
+                
+                // set this to currentRawCam
+                currentRawCam = data.id;
+                $('.run-raw h3').html('Raw Status Viewer (' + row.find('.camera-name').html() + ')');
             });
+            
+            // update raw if this is the current raw cam
+            if(data['status'] != undefined && data.id == currentRawCam) {
+                var status = $.parseJSON(data['status']);
+                $('.bacpacse').html(status['raw']['bacpac/se']);
+                $('.camerasx').html(status['raw']['camera/sx']);
+                $('.camerase').html(status['raw']['camera/se']);
+                console.debug(status);
+            }
         }
     });
     
     // initialize command list manager
     commandList = new SyncedList({
         updateURL: '/api/updateCommands/?callback=?',
-        updateInterval: 2000,
+        updateInterval: updateInterval,
         listParentSelector: '.command-list',
         listErrorSelector: '.manager-failed',
         itemPrefix: '#command-',
@@ -124,5 +142,34 @@ $(document).ready(function(){
         });
         modal.modal('hide');
     });
+    
+    // raw output visualizer
+    if($('.run-raw').length > 0) {
+        $('.raw-hold-button').click(function(e){
+            e.preventDefault();
+            $('.raw-group').each(function(){
+                var group = $(this);
+                var status = group.find('div:not(.raw-hold)').html();
+                group.find('.raw-hold').attr('status-hold', status);
+            });
+        });
+        setInterval(function(){
+            $('.raw-group').each(function(){
+                var group = $(this);
+                var status = group.find('div:not(.raw-hold)').html();
+                var holdStatus = group.find('.raw-hold').attr('status-hold');
+                var diff = '';
+                
+                if(holdStatus != undefined) {
+                    for(var i = 0; i < status.length; i++) {
+                        if(status[i] == holdStatus[i]) diff += holdStatus[i];
+                        else diff += "<span>" + holdStatus[i] + "</span>";
+                    }
+                    group.find('.raw-hold').html(diff);
+                }
+            });
+        }, updateInterval);
+    }
+    
     
 }); // end document ready
