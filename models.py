@@ -14,7 +14,7 @@ class Camera(models.Model):
         "res": "?",
         "fps": "?",
         "fov": "?",
-        "raw": []
+        "raw": {}
     }
     name = models.CharField(max_length=255)
     ssid = models.CharField(max_length=255)

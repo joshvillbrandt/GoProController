@@ -32,7 +32,7 @@ def sendCommand(command):
     
     result = controller.sendCommand(command.camera.ssid, command.camera.password, command.command)
     if debug:
-        print "    " + result
+        print "    " + str(result)
     # TODO: check result, if failed, put in a new command for later so that we can go through the rest of the list now
     command.time_completed = timezone.now()
     command.save()
