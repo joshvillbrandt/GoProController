@@ -91,6 +91,14 @@ SyncedList.prototype = {
                 
                 // save current ids for the next update
                 syncer._lastUpdateIDs = updateIDs;
+                
+                // process in extra list params
+                if(data.extra != undefined) {
+                    for(var key in data.extra) {
+                        console.log(key)
+                        $(key).html(data.extra[key]);
+                    }
+                }
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 if(syncer._listError != undefined) syncer._listError.show();

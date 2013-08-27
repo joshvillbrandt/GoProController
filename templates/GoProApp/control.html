@@ -42,7 +42,7 @@ GoProApp - Control
         </table>
     </div>
     <div class="panel-footer">
-        avg cmd delay: TBD seconds
+        avg cmd delay: <span class="cmd-time">?</span> seconds
     </div>
 </div>
 {% endblock sidebar_content %}
@@ -106,7 +106,10 @@ GoProApp - Control
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">Cameras</h3>
+        <h3 class="panel-title">
+            Cameras
+            <span class="pull-right proxy-health"></span>
+        </h3>
     </div>
     <div class="panel-body">
         <table class="table">

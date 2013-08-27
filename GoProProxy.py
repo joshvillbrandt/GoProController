@@ -38,6 +38,7 @@ def sendCommand(command):
         if debug:
             print "    " + str(result)
         # TODO: check result, if failed, put in a new command for later so that we can go through the rest of the list now
+        i += 1
     command.time_completed = timezone.now()
     command.save()
 

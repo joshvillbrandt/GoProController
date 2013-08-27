@@ -2,6 +2,7 @@ from django.http import HttpResponse #Http404, HttpResponseRedirect,
 from django.shortcuts import render #get_object_or_404, 
 #from django.core.urlresolvers import reverse
 from django.utils import timezone
+from datetime import timedelta
 from django.template import RequestContext, loader
 from dateutil import parser
 from GoProApp.models import *
@@ -54,6 +55,14 @@ def api(request, action = None):
                 }))
             
             response['list'].append(data)
+        
+        # determine proxy health
+        response['extra'] = {}
+        camera_set = Camera.objects.filter(last_attempt__gte=timezone.now()-timedelta(seconds=30))
+        if len(camera_set) > 0:
+            response['extra']['.proxy-health'] = "<span class=\"label label-default\">proxy is alive</span>"
+        else:
+            response['extra']['.proxy-health'] = "<span class=\"label label-danger\">proxy is dead</span>"
     
     elif action == 'updateCommands':
         response['time'] = str( timezone.now() )
@@ -78,6 +87,15 @@ def api(request, action = None):
                 }))
             
             response['list'].append(data)
+        
+        # determine cmd delay
+        response['extra'] = {}
+        command_set = CameraCommand.objects.filter(time_completed__isnull=False).order_by('-time_completed')[:10]
+        sum = 0
+        for command in command_set:
+            sum += (command.time_completed-command.date_added).total_seconds()
+        avg = sum / len(command_set)
+        response['extra']['.cmd-time'] = round(avg, 2)
     
     elif action == 'sendCommands':
         commands = json.loads(request.GET['commands'])
