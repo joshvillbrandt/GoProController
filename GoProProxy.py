@@ -57,7 +57,7 @@ def getStatus(camera):
     camera.save()
 
 # main loop here
-print "Starting GoProManager..."
+print "Starting GoProProxy..."
 
 # keep running until we land on Mars (and come back?)
 # keep the contents of this loop short (limit to one cmd/status or one status) so that we can quickly catch KeyboardInterrupt, SystemExit
