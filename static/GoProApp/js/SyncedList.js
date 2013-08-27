@@ -19,6 +19,7 @@ SyncedList.prototype = {
     _lastUpdateIDs: [],
     _listParent: undefined,
     _listError: undefined,
+    _timer: undefined,
 
     init: function(options) {
         // build options
@@ -32,9 +33,19 @@ SyncedList.prototype = {
             this._listError = $(this._options['listErrorSelector']);
         
         // start updater
+        this.restartTimer();
+    },
+    
+    restartTimer: function() {
+        // stop the timer if it is currently running
+        if(this._timer != undefined) clearInterval(this._timer);
+        
+        // immediately run the update function
         this._update();
+        
+        // restart the timer
         var syncer = this;
-        this.timer = setInterval(function(){
+        this._timer = setInterval(function(){
             syncer._update();
         }, this._options.updateInterval);
     },
@@ -57,14 +68,15 @@ SyncedList.prototype = {
                     
                     // add or replace html
                     if(item['html'] != undefined) {
-                        var row;
-                        var el = syncer._listParent.find(syncer._options.itemPrefix+item['id'])
-                        if(el.length > 0) row = el.replaceWith(item['html']);
-                        else row = syncer._listParent.append(item['html']);
+                        var el = syncer._listParent.find(syncer._options.itemPrefix+item['id']);
+                        if(el.length > 0) el.replaceWith(item['html']);
+                        else syncer._listParent.append(item['html']);
                         
                         // run external update item function
-                        if(syncer._options.updateItem != undefined)
-                            syncer._options.updateItem(row);
+                        if(syncer._options.updateItem != undefined) {
+                            el = syncer._listParent.find(syncer._options.itemPrefix+item['id']);
+                            syncer._options.updateItem(el);
+                        }
                     }
                 }
                 
@@ -72,8 +84,8 @@ SyncedList.prototype = {
                 for(var i = 0; i < syncer._lastUpdateIDs.length; i++) {
                     if($.inArray(syncer._lastUpdateIDs[i], updateIDs) < 0) {
                         var el = syncer._listParent.find(syncer._options.itemPrefix+syncer._lastUpdateIDs[i])
-                        //el.remove();
-                        el.fadeOut(2000,function(){$(this).remove();});
+                        el.remove();
+                        //el.fadeOut(2000,function(){$(this).remove();});
                     }
                 }
                 
@@ -88,7 +100,7 @@ SyncedList.prototype = {
     },
     
     stopUpdate: function() {
-        clearInterval(this.timer);
+        if(this._timer != undefined) clearInterval(this._timer);
     }
 };
 

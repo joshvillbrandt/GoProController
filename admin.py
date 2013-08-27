@@ -8,11 +8,11 @@ from GoProApp.models import *
 
 class CameraCommandInline(admin.StackedInline):
     model = CameraCommand
-    fields = ['command', 'time_requested', 'time_completed']
+    fields = ['command', 'time_completed']
     extra = 0
  
 class CameraAdmin(admin.ModelAdmin):
-    fields = ['name', 'ssid', 'password', 'status', 'last_attempt', 'last_update']
+    fields = ['name', 'ssid', 'password', 'status', 'last_update']
     inlines = [CameraCommandInline]
  
 admin.site.register(Camera, CameraAdmin)

@@ -27,7 +27,7 @@ $(document).ready(function(){
         listErrorSelector: '.manager-failed',
         itemPrefix: '#command-',
         updateItem: function(row){
-            // delete command
+            // bind delete command
             row.find('a.gopro-deletecommand').click(function(e){
                 e.preventDefault();
                 var commandID = $(this).attr('gopro-command');
@@ -36,12 +36,13 @@ $(document).ready(function(){
                 var args = {command: commandID};
                 $.getJSON('/api/deleteCommand/?callback=?', args, function(data, textStatus, jqXHR) {
                     // the syncer will automatically delete this row if the app really gets rid of it
+                    commandList.restartTimer();
                 });
             });
         }
     });
     
-    // send command
+    // bind send command
     $('a.gopro-sendcommand').click(function(e){
         e.preventDefault();
         var a = $(this);
@@ -58,8 +59,8 @@ $(document).ready(function(){
         
         // push to server
         var args = {commands: JSON.stringify(commands)};
-        console.log(args)
         $.getJSON('/api/sendCommands/?callback=?', args, function(data, textStatus, jqXHR) {
+            commandList.restartTimer();
         });
     });
     

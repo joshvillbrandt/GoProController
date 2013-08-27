@@ -64,7 +64,7 @@ def api(request, action = None):
             lastUpdate = parser.parse(request.GET['last_update'])
         
         # build list
-        command_set = CameraCommand.objects.filter(time_completed__isnull=True).order_by('time_requested')
+        command_set = CameraCommand.objects.filter(time_completed__isnull=True).order_by('date_added')
         response['list'] = []
         template = loader.get_template('GoProApp/control_command_row.html')
         for command in command_set:
@@ -81,12 +81,11 @@ def api(request, action = None):
     
     elif action == 'sendCommands':
         commands = json.loads(request.GET['commands'])
-        request_time = timezone.now()
         
         for command in commands:
             try:
                 camera = Camera.objects.get(pk=int(command[0]))
-                c = CameraCommand(camera=camera, command=command[1], time_requested=request_time)
+                c = CameraCommand(camera=camera, command=command[1])
                 c.save()
             except:
                 pass
