@@ -90,8 +90,25 @@ def api(request, action = None):
             except:
                 pass
     
+    elif action == 'editCamera':
+        pk = request.GET['pk']
+        
+        if pk == 'new':
+            c = Camera(name=request.GET['name'], ssid=request.GET['ssid'], password=request.GET['password'])
+            c.save()
+        else:
+            c = Camera.objects.get(pk=pk)
+            c.name = request.GET['name']
+            c.ssid = request.GET['ssid']
+            c.password = request.GET['password']
+            c.save()
+    
     elif action == 'deleteCommand':
-        command = CameraCommand.objects.get(pk=int(request.GET['command']))
+        command = CameraCommand.objects.get(pk=int(request.GET['pk']))
+        command.delete()
+    
+    elif action == 'deleteCamera':
+        command = Camera.objects.get(pk=int(request.GET['pk']))
         command.delete()
     
     # prep response for output

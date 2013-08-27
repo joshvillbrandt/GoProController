@@ -10,6 +10,38 @@
 var cameraList, commandList;
 
 $(document).ready(function(){
+    // grab modal
+    var modal = $('#camera-modal');
+    
+    // bind to add camera
+    $('.gopro-addcamera').click(function(e){
+        e.preventDefault();
+        modal.find('.modal-title').html('Add Camera');
+        modal.find('[name=pk]').val('new');
+        modal.find('[name=name]').val('');
+        modal.find('[name=ssid]').val('');
+        modal.find('[name=password]').val('');
+        modal.find('.gopro-deletecamera').attr('gopro-camera', '');
+        modal.find('.existing-camera').hide();
+        modal.modal();
+    });
+    
+    // Save Camera Form
+    modal.find('form').submit(function(e){
+        e.preventDefault();
+        
+        var args = {
+            pk: modal.find('[name=pk]').val(),
+            name: modal.find('[name=name]').val(),
+            ssid: modal.find('[name=ssid]').val(),
+            password: modal.find('[name=password]').val(),
+        };
+        $.getJSON('/api/editCamera/?callback=?', args, function(data, textStatus, jqXHR) {
+            cameraList.restartTimer();
+        });
+        modal.modal('hide');
+    });
+    
     // initialize camera list manager
     cameraList = new SyncedList({
         updateURL: '/api/updateCameras/?callback=?',
@@ -17,6 +49,20 @@ $(document).ready(function(){
         listParentSelector: '.camera-list',
         listErrorSelector: '.manager-failed',
         itemPrefix: '#camera-',
+        updateItem: function(row){
+            // bind edit camera
+            row.find('a').click(function(e){
+                e.preventDefault();
+                modal.find('.modal-title').html(row.find('.camera-name').html());
+                modal.find('[name=pk]').val(row.attr('gopro-camera'));
+                modal.find('[name=name]').val(row.find('.camera-name').html());
+                modal.find('[name=ssid]').val(row.find('.camera-ssid').html());
+                modal.find('[name=password]').val(row.find('.camera-ssid').attr('title'));
+                modal.find('.gopro-deletecamera').attr('gopro-camera', row.attr('gopro-camera'));
+                modal.find('.existing-camera').show();
+                modal.modal();
+            });
+        }
     });
     
     // initialize command list manager
@@ -33,7 +79,7 @@ $(document).ready(function(){
                 var commandID = $(this).attr('gopro-command');
                 
                 // push to server
-                var args = {command: commandID};
+                var args = {pk: commandID};
                 $.getJSON('/api/deleteCommand/?callback=?', args, function(data, textStatus, jqXHR) {
                     // the syncer will automatically delete this row if the app really gets rid of it
                     commandList.restartTimer();
@@ -43,10 +89,10 @@ $(document).ready(function(){
     });
     
     // bind send command
-    $('a.gopro-sendcommand').click(function(e){
+    $('.gopro-sendcommand').click(function(e){
         e.preventDefault();
-        var a = $(this);
-        var cameraID = a.attr('gopro-camera'), command = a.attr('gopro-command');
+        var el = $(this);
+        var cameraID = el.attr('gopro-camera'), command = el.attr('gopro-command');
         
         var commands = [];
         var cameras = cameraList._lastUpdateIDs;
@@ -62,6 +108,19 @@ $(document).ready(function(){
         $.getJSON('/api/sendCommands/?callback=?', args, function(data, textStatus, jqXHR) {
             commandList.restartTimer();
         });
+    });
+    
+    // bind delete camera
+    $('.gopro-deletecamera').click(function(e){
+        e.preventDefault();
+        var el = $(this);
+        
+        // push to server
+        var args = {pk: el.attr('gopro-camera')};
+        $.getJSON('/api/deleteCamera/?callback=?', args, function(data, textStatus, jqXHR) {
+            cameraList.restartTimer();
+        });
+        modal.modal('hide');
     });
     
 }); // end document ready

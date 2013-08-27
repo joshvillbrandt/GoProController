@@ -1,7 +1,7 @@
 
-                    <tr id="camera-{{ camera.id }}">
+                    <tr id="camera-{{ camera.id }}" gopro-camera="{{ camera.id }}">
                         <td><span class="status status-{{ camera.status.summary }}" title="camera is {{ camera.status.summary }}"></td>
-                        <td><a href="#">{{ camera.name }}</a> <small title="{{ camera.ssid }}:{{ camera.password }}">({{ camera.ssid }})</small></td>
+                        <td><a href="#" class="camera-name">{{ camera.name }}</a> <small>(<span title="{{ camera.password }}" class="camera-ssid">{{ camera.ssid }}</span>)</small></td>
                         <td>{% if camera.status.mode == "video" %}{{ camera.status.mode }}: {{ camera.status.res }}, {{ camera.status.fps }}fps, {{ camera.status.fov }} fov{% else %}{{ camera.status.mode }}{% endif %}</td>
                         <td>?</td>
                         <td>{{ camera.status.batt }}%</td>

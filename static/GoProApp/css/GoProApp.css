@@ -32,3 +32,18 @@
     font-size: 80%;
     font-style: italic;
 }
+
+.camera-group-control div.btn-group {
+    margin: 0 15px 15px 0;
+}
+
+.camera-group-control {
+    margin-bottom: -15px;
+}
+
+.modal {
+    overflow-y: auto; /* not sure why they have 'scroll' in place but i like 'auto' better */
+}
+body.modal-open, .modal-open .navbar-fixed-top, .modal-open .navbar-fixed-bottom {
+    margin-right: 0;
+}
