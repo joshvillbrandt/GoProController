@@ -20,4 +20,8 @@ Once you have added the app, add it to your INSTALLED_APPS list in your projects
 
     url(r'^', include('GoProApp.urls', namespace="GoProApp")),
 
-Finally, run `python manage.py syncdb` to install the models.
+Then run `python manage.py syncdb` to install the models and launch runserver to see the site in action.
+
+To actually be able to talk to the cameras, you also need to start the GoProProxy.py script. The script continuously polls the cameras for their statuses and sends commands to the cameras as they are queued up in the server. GoProProxy expects [GoProController](https://github.com/joshvillbrandt/GoProController) to be in your project directory. Once it is there, cd to your project directory and launch the proxy like this:
+
+    python GoProProxy.py
