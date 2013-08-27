@@ -65,10 +65,10 @@ SyncedList.prototype = {
                 for(var i = 0; i < data.list.length; i++) {
                     var item = data.list[i];
                     updateIDs.push(item['id']);
+                    var el = syncer._listParent.find(syncer._options.itemPrefix+item['id']);
                     
                     // add or replace html
                     if(item['html'] != undefined) {
-                        var el = syncer._listParent.find(syncer._options.itemPrefix+item['id']);
                         if(el.length > 0) el.replaceWith(item['html']);
                         else syncer._listParent.append(item['html']);
                         
@@ -76,6 +76,13 @@ SyncedList.prototype = {
                         if(syncer._options.updateItem != undefined) {
                             el = syncer._listParent.find(syncer._options.itemPrefix+item['id']);
                             syncer._options.updateItem(el);
+                        }
+                    }
+                    
+                    // process in extra item params
+                    if(item['extra'] != undefined) {
+                        for(var selector in item['extra']) {
+                            el.find(selector).html(item['extra'][selector]);
                         }
                     }
                 }

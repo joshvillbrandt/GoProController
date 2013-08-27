@@ -53,6 +53,15 @@ def api(request, action = None):
                 data['html'] = template.render(RequestContext(request, {
                     'camera': camera,
                 }))
+                
+            # calculate last update
+            data['extra'] = {}
+            diff = timezone.now() - camera.last_update
+            minutes = divmod(diff.days * 86400 + diff.seconds, 60)[0]
+            if minutes > 60:
+                data['extra']['.last-update'] = ">1 hour"
+            else:
+                data['extra']['.last-update'] = str(minutes) + " minutes"
             
             response['list'].append(data)
         

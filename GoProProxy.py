@@ -50,8 +50,12 @@ def getStatus(camera):
     camera.last_attempt = timezone.now()
     status = controller.getStatus(camera.ssid, camera.password)
     camera.status = json.loads(camera.status)
-    for item in status:
-        camera.status[item] = status[item]
+    for key in status:
+        if isinstance(status[key], dict) and isinstance(camera.status[key], dict):
+            for keykey in status[key]:
+                camera.status[key][keykey] = status[key][keykey]
+        else:
+            camera.status[key] = status[key]
     if 'power' in status and status['power'] == 'on':
         camera.last_update = camera.last_attempt
     

@@ -5,5 +5,5 @@
                         <td>{% if camera.status.mode == "video" %}{{ camera.status.mode }}: {{ camera.status.res }}, {{ camera.status.fps }}fps, {{ camera.status.fov }} fov{% else %}{{ camera.status.mode }}{% endif %}</td>
                         <td>?</td>
                         <td>{{ camera.status.batt }}%</td>
-                        <td>{{ camera.last_update|timesince }}</td>
+                        <td class="last-update"></td>
                     </tr>
