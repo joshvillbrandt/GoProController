@@ -53,12 +53,13 @@ $(document).ready(function(){
             // bind edit camera
             row.find('a').click(function(e){
                 e.preventDefault();
+                var cameraID = row.attr('gopro-camera');
                 modal.find('.modal-title').html(row.find('.camera-name').html());
-                modal.find('[name=pk]').val(row.attr('gopro-camera'));
+                modal.find('[name=pk]').val(cameraID);
                 modal.find('[name=name]').val(row.find('.camera-name').html());
                 modal.find('[name=ssid]').val(row.find('.camera-ssid').html());
                 modal.find('[name=password]').val(row.find('.camera-ssid').attr('title'));
-                modal.find('.gopro-deletecamera').attr('gopro-camera', row.attr('gopro-camera'));
+                modal.find('button').attr('gopro-camera', cameraID);
                 modal.find('.existing-camera').show();
                 modal.modal();
             });
