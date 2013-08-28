@@ -43,7 +43,10 @@ def api(request, action = None):
         # build list
         camera_set = Camera.objects.all().order_by('name')
         response['list'] = []
-        template = loader.get_template('GoProApp/control_camera_row.html')
+        if "preview" in request.GET:
+            template = loader.get_template('GoProApp/preview_row.html')
+        else:
+            template = loader.get_template('GoProApp/control_camera_row.html')
         for camera in camera_set:
             data = {}
             data['id'] = camera.id
@@ -54,7 +57,7 @@ def api(request, action = None):
             
             # only need to send bulk of data if the client hasn't seen this object before
             camera.status = json.loads(camera.status)
-            if not lastUpdate or (camera.last_attempt is not None and camera.last_attempt >= lastUpdate) or camera.date_added >= lastUpdate:
+            if not lastUpdate or (camera.last_update is not None and camera.last_update >= lastUpdate) or camera.date_added >= lastUpdate:
                 data['html'] = template.render(RequestContext(request, {
                     'camera': camera,
                 }))

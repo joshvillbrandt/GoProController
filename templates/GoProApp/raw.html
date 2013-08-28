@@ -18,41 +18,46 @@ GoProApp - Control
                     <h4 class="modal-title">Modal</h4>
                 </div>
                 <div class="modal-body">
+                    <div class="camera-group-control existing-camera">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default" disabled="disabled">Power: </button>
+                            <button type="button" class="btn btn-primary gopro-sendcommand" gopro-camera="" gopro-command="power_on">On</button>
+                            <button type="button" class="btn btn-primary gopro-sendcommand" gopro-camera="" gopro-command="power_off">Off</button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default" disabled="disabled">Record: </button>
+                            <button type="button" class="btn btn-primary gopro-sendcommand" gopro-camera="" gopro-command="record_on">On</button>
+                            <button type="button" class="btn btn-primary gopro-sendcommand" gopro-camera="" gopro-command="record_off">Off</button>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default" disabled="disabled">Mode: </button>
+                            <button type="button" class="btn btn-primary gopro-sendcommand" gopro-camera="" gopro-command="mode_video">Video</button>
+                            <button type="button" class="btn btn-primary gopro-sendcommand" gopro-camera="" gopro-command="mode_still">Still</button>
+                        </div>
+                    </div>
+                    <hr class="existing-camera">
                     <input type="hidden" name="pk" value="">
                     <div class="form-group">
-                        <label class="col-xs-3">Name</label>
-                        <div class="col-xs-9">
+                        <label class="col-xs-4">Name</label>
+                        <div class="col-xs-8">
                             <input type="text" class="form-control" name="name" value="">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-xs-3">SSID</label>
-                        <div class="col-xs-9">
+                        <label class="col-xs-4">SSID</label>
+                        <div class="col-xs-8">
                             <input type="text" class="form-control" name="ssid" value="">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-xs-3">Password</label>
-                        <div class="col-xs-9">
+                        <label class="col-xs-4">Password</label>
+                        <div class="col-xs-8">
                             <input type="text" class="form-control" name="password" value="">
                         </div>
                     </div>
-                    <div class="form-group existing-camera">
-                        <label class="col-xs-3">Control</label>
-                        <div class="col-xs-9">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary gopro-sendcommand" gopro-camera="" gopro-command="power_on">Pwr On</button>
-                                <button type="button" class="btn btn-primary gopro-sendcommand" gopro-camera="" gopro-command="power_off">Pwr Off</button>
-                                <button type="button" class="btn btn-primary gopro-sendcommand" gopro-camera="" gopro-command="record_on">Rcd On</button>
-                                <button type="button" class="btn btn-primary gopro-sendcommand" gopro-camera="" gopro-command="record_off">Rcd Off</button>
-                                <button type="button" class="btn btn-primary gopro-sendcommand" gopro-camera="" gopro-command="mode_video">Vid</button>
-                                <button type="button" class="btn btn-primary gopro-sendcommand" gopro-camera="" gopro-command="mode_still">Still</button>
-                            </div>
-                            <p class="help-block">Commands are queued instantly - no need to save.</p>
-                        </div>
-                    </div>
-                    <div class="existing-camera gopro-raw">
-                        <hr>
+                    <hr class="existing-camera">
+                    <div class="modal-gopro-thumb">
+                        <img class="gopro-thumb">
                     </div>
                 </div>
                 <div class="modal-footer">

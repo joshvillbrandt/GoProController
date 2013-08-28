@@ -15,7 +15,6 @@ SyncedList.prototype = {
         itemPrefix: '.itemid-',
         updateItem: undefined,
     },
-    listData: {}, // can be used externally
     _lastUpdateTime: undefined, // set by server
     _lastUpdateIDs: [],
     _listParent: undefined,
@@ -68,11 +67,6 @@ SyncedList.prototype = {
                     var item = data.list[i];
                     updateIDs.push(item['id']);
                     var el = syncer._listParent.find(syncer._options.itemPrefix+item['id']);
-                    
-                    // save data for someone else to use
-                    if(syncer.listData[item['id']] == undefined)
-                        syncer.listData[item['id']] = item;
-                    else $.extend(syncer.listData[item['id']], item); // shallow extend
                     
                     // add or replace html
                     if(item['html'] != undefined) {

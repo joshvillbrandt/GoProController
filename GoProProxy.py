@@ -59,6 +59,11 @@ def getStatus(camera):
     if 'power' in status and status['power'] == 'on':
         camera.last_update = camera.last_attempt
     
+    # grab snapshot
+    image = controller.getImage(camera.ssid, camera.password)
+    if image != False:
+        camera.image = image
+    
     # save camera
     camera.status = json.dumps(camera.status)
     camera.save()

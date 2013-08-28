@@ -56,13 +56,24 @@ body.modal-open, .modal-open .navbar-fixed-top, .modal-open .navbar-fixed-bottom
     color: red;
 }
 
-.gopro-thumb {
-    width: 250px;
-    height: 250px;
-    background-color: red;
+.modal-gopro-thumb {
+    text-align:center
 }
 
-.gopro-preview-block {
+.modal-gopro-thumb .gopro-thumb {
+    max-width: 500px;
+    max-height: 300px;
+    background-color: #eee;
+}
+
+.preview-list .panel {
     float: left;
     width: 280;
+    margin-right: 15px;
+}
+
+.preview-list .gopro-thumb {
+    min-width: 240px;
+    min-height: 240px;
+    background-color: #eee;
 }

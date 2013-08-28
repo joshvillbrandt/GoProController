@@ -34,6 +34,7 @@ class CameraCommand(models.Model):
         ('record_off', 'Record Off'),
         ('record_on', 'Record On'),
         ('mode_video', 'Mode Video'),
+        ('mode_still', 'Mode Still'),
     )
     camera = models.ForeignKey(Camera)
     command = models.CharField(max_length=255, choices=COMMANDS) # command list above is defined by GoProController.py
