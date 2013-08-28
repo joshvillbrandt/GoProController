@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+            <div class="container preview-container">
+<div class="row base-sidebar">
+    <div class="col-md-3 sidebar">
+        
+<!-- START SIDEBAR -->
+{% block sidebar_content %}
+Sidebar content goes here...
+{% endblock sidebar_content %}
+<!-- END SIDEBAR -->
+
+    </div>
+
+    <div class="col-md-9">
+    
+<!-- START MAIN CONTENT -->
+{% block main_content %}
+Main content goes here...
+{% endblock main_content %}
+<!-- END MAIN CONTENT -->
+
+    </div>
+</div>
+
+            </div>
+{% endblock content %}

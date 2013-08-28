@@ -5,10 +5,6 @@ Controls multiple GoPros from a web page.
 
 This is a reusable Django app that provides a front end for the [GoProController](https://github.com/joshvillbrandt/GoProController) python class. The app itself is built off of [django-quick-start-app](http://github.com/joshvillbrandt/django-quick-start-app).
 
-![GoProApp Screenshot](screenshot.jpg)
-
-![GoProApp Screenshot](screenshot2.jpg)
-
 # Setup
 
 To use this app, you must first set up a Django project. Try out [django-quick-start-project](http://github.com/joshvillbrandt/django-quick-start-project) for an easy start.
@@ -29,3 +25,14 @@ Then run `python manage.py syncdb` to install the models and launch runserver to
 To actually be able to talk to the cameras, you also need to start the GoProProxy.py script. The script continuously polls the cameras for their statuses and sends commands to the cameras as they are queued up in the server. GoProProxy expects [GoProController](https://github.com/joshvillbrandt/GoProController) to be in your project directory. Once it is there, cd to your project directory and launch the proxy like this:
 
     python GoProProxy.py
+
+# Todo
+
+* add upstart config for GoProProxy
+* run server via apache
+
+# Screenshots
+
+![GoProApp Screenshot](screenshot.jpg)
+
+![GoProApp Screenshot](screenshot2.jpg)

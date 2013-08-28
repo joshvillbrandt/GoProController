@@ -57,7 +57,7 @@ def api(request, action = None):
             
             # only need to send bulk of data if the client hasn't seen this object before
             camera.status = json.loads(camera.status)
-            if not lastUpdate or (camera.last_update is not None and camera.last_update >= lastUpdate) or camera.date_added >= lastUpdate:
+            if not lastUpdate or (camera.last_attempt is not None and camera.last_attempt >= lastUpdate) or camera.date_added >= lastUpdate:
                 data['html'] = template.render(RequestContext(request, {
                     'camera': camera,
                 }))

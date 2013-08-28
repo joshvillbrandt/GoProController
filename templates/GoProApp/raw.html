@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "GoProApp/base.html" %}
 
 {% block title %}
 GoProApp - Control
@@ -9,6 +9,7 @@ GoProApp - Control
 {% endblock extra_head %}
 
 {% block content %}
+            <div class="container">
 <div class="modal fade" id="camera-modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -140,6 +141,7 @@ GoProApp - Control
         Click a camera hyperlink above to trigger the Raw Status Viewer for that camera.
     </div>
 </div>
+            </div>
 {% endblock content %}
 
 {% block extra_js %}

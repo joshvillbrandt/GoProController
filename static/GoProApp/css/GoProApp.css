@@ -78,7 +78,7 @@ body.modal-open, .modal-open .navbar-fixed-top, .modal-open .navbar-fixed-bottom
 
 .preview-list .gopro-thumb {
     min-width: 240px;
-    max-width: 425px;
+    max-width: 420px;
     min-height: 135px;
     background-color: #eee;
 }
@@ -87,4 +87,8 @@ body.modal-open, .modal-open .navbar-fixed-top, .modal-open .navbar-fixed-bottom
     .preview-list .gopro-thumb {
         max-width: 315px;
     }
+}
+
+.preview-container {
+    max-width: inherit
 }
