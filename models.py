@@ -7,13 +7,6 @@ import json
 class Camera(models.Model):
     statusTemplate = {
         "summary": "notfound", # one of "notfound", "off", "on", or "recording"
-        "power": "?",
-        "batt": "?",
-        "mode": "?",
-        "record": "?",
-        "res": "?",
-        "fps": "?",
-        "fov": "?",
         "raw": {}
     }
     name = models.CharField(max_length=255)
