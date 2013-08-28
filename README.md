@@ -5,7 +5,7 @@ Controls multiple GoPros from a web page.
 
 This is a reusable Django app that provides a front end for the [GoProController](https://github.com/joshvillbrandt/GoProController) python class. The app itself is built off of [django-quick-start-app](http://github.com/joshvillbrandt/django-quick-start-app).
 
-![GoProApp Screenshot](screenshot.jpg "GoProApp Screenshot")
+![GoProApp Screenshot](screenshot.jpg)
 
 # Setup
 
