@@ -7,6 +7,8 @@ This is a reusable Django app that provides a front end for the [GoProController
 
 ![GoProApp Screenshot](screenshot.jpg)
 
+![GoProApp Screenshot](screenshot2.jpg)
+
 # Setup
 
 To use this app, you must first set up a Django project. Try out [django-quick-start-project](http://github.com/joshvillbrandt/django-quick-start-project) for an easy start.
