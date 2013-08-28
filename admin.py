@@ -12,7 +12,7 @@ class CameraCommandInline(admin.StackedInline):
     extra = 0
  
 class CameraAdmin(admin.ModelAdmin):
-    fields = ['name', 'ssid', 'password', 'status', 'last_update']
+    fields = ['name', 'ssid', 'password', 'status', 'last_update', 'image']
     inlines = [CameraCommandInline]
  
 admin.site.register(Camera, CameraAdmin)

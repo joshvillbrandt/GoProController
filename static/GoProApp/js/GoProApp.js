@@ -68,6 +68,10 @@ $(document).ready(function(){
                 modal.find('.existing-camera').show();
                 modal.modal();
                 
+                // image
+                if(data['image'] != undefined)
+                    modal.find('.gopro-thumb').attr('src', data['image']);
+                
                 // set this to currentRawCam
                 currentRawCam = data.id;
                 $('.run-raw h3').html('Raw Status Viewer (' + row.find('.camera-name').html() + ')');

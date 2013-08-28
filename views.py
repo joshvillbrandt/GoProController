@@ -58,6 +58,7 @@ def api(request, action = None):
                 data['html'] = template.render(RequestContext(request, {
                     'camera': camera,
                 }))
+                data['image'] = camera.image
                 
             # calculate last update
             data['extra'] = {}

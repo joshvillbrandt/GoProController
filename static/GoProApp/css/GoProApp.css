@@ -34,7 +34,7 @@
 }
 
 .camera-group-control div.btn-group {
-    margin: 0 15px 15px 0;
+    margin: 0 10px 15px 0;
 }
 
 .camera-group-control {
@@ -54,4 +54,15 @@ body.modal-open, .modal-open .navbar-fixed-top, .modal-open .navbar-fixed-bottom
 
 .raw-group span {
     color: red;
+}
+
+.gopro-thumb {
+    width: 250px;
+    height: 250px;
+    background-color: red;
+}
+
+.gopro-preview-block {
+    float: left;
+    width: 280;
 }
