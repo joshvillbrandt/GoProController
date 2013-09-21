@@ -7,7 +7,11 @@ This is a reusable Django app that provides a front end for the [GoProController
 
 # Setup
 
-To use this app, you must first set up a Django project. Try out [django-quick-start-project](http://github.com/joshvillbrandt/django-quick-start-project) for an easy start.
+This app depends on python-dateutil. If you don't have that installed already:
+
+    sudo apt-get install python-dateutil
+
+To use this app, you must have a Django project already set up. Try out [django-quick-start-project](http://github.com/joshvillbrandt/django-quick-start-project) for an easy start.
 
     django-admin startproject --template=https://github.com/joshvillbrandt/django-quick-start-project/archive/master.zip --extension=py,html GoProSite
 
