@@ -113,9 +113,11 @@ def api(request, action = None):
         response['extra'] = {}
         command_set = CameraCommand.objects.filter(time_completed__isnull=False).order_by('-time_completed')[:10]
         sum = 0
+        avg = 0
         for command in command_set:
             sum += (command.time_completed-command.date_added).total_seconds()
-        avg = sum / len(command_set)
+        if len(command_set) > 0:
+            avg = sum / len(command_set)
         response['extra']['.cmd-time'] = round(avg, 2)
     
     elif action == 'sendCommands':
