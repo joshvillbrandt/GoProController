@@ -71,13 +71,15 @@ while "people" != "on Mars":
     command_set = CameraCommand.objects.filter(time_completed__isnull=True, camera__ssid__exact=controller.currentSSID)
     if len(command_set) > 0:
         sendCommand(command_set[0])
-        getStatus(command_set[0].camera) # get the status now because it is cheap
+        if(command_set[0].command != "power_off"):
+            getStatus(command_set[0].camera) # get the status now because it is cheap
     else:
         # PRIORITY 2: send the oldest command still in the queue
         command_set = CameraCommand.objects.filter(time_completed__isnull=True).order_by('-date_added')
         if len(command_set) > 0:
             sendCommand(command_set[0])
-            getStatus(command_set[0].camera) # get the status now because it is cheap
+            if(command_set[0].command != "power_off"):
+                getStatus(command_set[0].camera) # get the status now because it is cheap
         else:
             # PRIORITY 3: check status of the most stale camera
             camera_set = Camera.objects.all().order_by('last_attempt')
