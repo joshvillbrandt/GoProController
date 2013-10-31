@@ -33,7 +33,7 @@ def sendCommand(command):
         result = controller.sendCommand(command.camera.ssid, command.camera.password, command.command)
         # TODO: check result, if failed, put in a new command for later so that we can go through the rest of the list now
         i += 1
-        
+
     command.time_completed = timezone.now()
     command.save()
 
@@ -48,13 +48,14 @@ def getStatus(camera):
                 camera.status[key][keykey] = status[key][keykey]
         else:
             camera.status[key] = status[key]
-    if 'power' in status and status['power'] == 'on':
+    if 'power' in status:
         camera.last_update = camera.last_attempt
     
     # grab snapshot
-    image = controller.getImage(camera.ssid, camera.password)
-    if image != False:
-        camera.image = image
+    if 'power' in status and status['power'] == 'on':
+        image = controller.getImage(camera.ssid, camera.password)
+        if image != False:
+            camera.image = image
     
     # save camera
     camera.status = json.dumps(camera.status)
