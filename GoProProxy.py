@@ -23,7 +23,6 @@ import json
 import time
 
 # settings
-debug = True
 maxRetry = 3
 
 # send command
@@ -31,22 +30,15 @@ def sendCommand(command):
     i = 0
     result = False
     while i < maxRetry and result == False:
-        if debug:
-            print 'sending command ' + command.command + ' to ' + command.camera.ssid
-        
         result = controller.sendCommand(command.camera.ssid, command.camera.password, command.command)
-        if debug:
-            print "    " + str(result)
         # TODO: check result, if failed, put in a new command for later so that we can go through the rest of the list now
         i += 1
+        
     command.time_completed = timezone.now()
     command.save()
 
 # get status
 def getStatus(camera):
-    if debug:
-        print 'getting status from ' + camera.ssid
-    
     camera.last_attempt = timezone.now()
     status = controller.getStatus(camera.ssid, camera.password)
     camera.status = json.loads(camera.status)
