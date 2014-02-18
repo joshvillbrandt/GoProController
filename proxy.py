@@ -5,15 +5,17 @@
 # 8/24/2013
 
 # import django settings
-import os, sys
-sys.path.append('/var/sites/GoProSite/')
-os.environ['DJANGO_SETTINGS_MODULE'] = 'GoProSite.settings'
-import GoProSite
+import sys  
+sys.path.append('/home/GoProApp')
+import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "GoProApp.settings")
+import GoProApp
 
 # import django models
 from GoProApp.models import *
 
 # import controller
+sys.path.append('/home/GoProApp/GoProController')
 from GoProController import GoProController
 controller = GoProController()
 

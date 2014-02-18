@@ -38,7 +38,7 @@ python manage.py runserver 0.0.0.0:8000
 In another terminal window, launch the proxy to communicate with the cameras:
 
 ```bash
-python ~/GoProApp/GoProApp/proxy.py
+python ~/GoProApp/proxy.py
 ```
 
 # Todo
