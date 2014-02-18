@@ -11,6 +11,9 @@ key=$(tr -dc "[:alpha:]" < /dev/urandom | head -c 48)
 sed "s/^SECRET_KEY =.*/SECRET_KEY = '$key'/g" GoProApp/settings.py --quiet
 python manage.py syncdb --noinput # remove --noinput to create a super user
 
+echo "Pulling GoProController..."
+git submodule update --init
+
 # remove the steps below if you don't want Apache and Upstart
 
 echo "Configuring Apache..."
