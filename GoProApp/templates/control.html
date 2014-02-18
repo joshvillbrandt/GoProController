@@ -1,12 +1,8 @@
-{% extends "GoProApp/base-sidebar.html" %}
+{% extends "base-sidebar.html" %}
 
 {% block title %}
 GoProApp - Control
 {% endblock title %}
-
-{% block extra_head %}
-        <link href="{{ STATIC_URL }}GoProApp/css/GoProApp.css" rel="stylesheet">
-{% endblock extra_head %}
 
 {% block sidebar_content %}
 <div class="panel panel-default">
@@ -146,8 +142,3 @@ GoProApp - Control
     </div>
 </div>
 {% endblock main_content %}
-
-{% block extra_js %}
-        <script src="{{ STATIC_URL }}GoProApp/js/SyncedList.js"></script>
-        <script src="{{ STATIC_URL }}GoProApp/js/GoProApp.js"></script>
-{% endblock extra_js %}

@@ -14,19 +14,19 @@ def control(request):
     context = {
         'active_nav': 'control'
     }
-    return render(request, 'GoProApp/control.html', context)
+    return render(request, 'control.html', context)
 
 def raw(request):
     context = {
         'active_nav': 'raw'
     }
-    return render(request, 'GoProApp/raw.html', context)
+    return render(request, 'raw.html', context)
 
 def preview(request):
     context = {
         'active_nav': 'preview',
     }
-    return render(request, 'GoProApp/preview.html', context)
+    return render(request, 'preview.html', context)
 
 def api(request, action = None):
     response = {}
@@ -44,9 +44,9 @@ def api(request, action = None):
         camera_set = Camera.objects.all().order_by('name')
         response['list'] = []
         if "preview" in request.GET:
-            template = loader.get_template('GoProApp/preview_row.html')
+            template = loader.get_template('preview_row.html')
         else:
-            template = loader.get_template('GoProApp/control_camera_row.html')
+            template = loader.get_template('control_camera_row.html')
         for camera in camera_set:
             data = {}
             data['id'] = camera.id
@@ -96,7 +96,7 @@ def api(request, action = None):
         # build list
         command_set = CameraCommand.objects.filter(time_completed__isnull=True).order_by('date_added')
         response['list'] = []
-        template = loader.get_template('GoProApp/control_command_row.html')
+        template = loader.get_template('control_command_row.html')
         for command in command_set:
             data = {}
             data['id'] = command.id

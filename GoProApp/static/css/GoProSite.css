@@ -1,0 +1,13 @@
+/* home.html */
+.jumbotron {
+    text-align: center;
+    background-color: transparent;
+}
+.jumbotron .btn {
+    font-size: 21px;
+    padding: 14px 24px;
+}
+.jumbotron img {
+    height: 64px;
+    margin-top: -20px;
+}

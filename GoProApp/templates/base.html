@@ -5,21 +5,19 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="">
         <meta name="author" content="">
-        <link rel="shortcut icon" href="{{ STATIC_URL }}GoProApp/img/favicon.png">
+        <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.png">
 
-        <title>{% block title %}GoProSite{% endblock title %}</title>
+        <title>{% block title %}GoProApp{% endblock title %}</title>
         
         <link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet">
         <link href="{{ STATIC_URL }}css/base.css" rel="stylesheet">
-        <link href="{{ STATIC_URL }}css/GoProSite.css" rel="stylesheet">
+        <link href="{{ STATIC_URL }}css/GoProApp.css" rel="stylesheet">
 
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
             <script src="{{ STATIC_URL }}js/html5shiv.js"></script>
             <script src="{{ STATIC_URL }}js/respond.min.js"></script>
         <![endif]-->
-        {% block extra_head %}
-        {% endblock extra_head %}
     </head>
 
     <body>
@@ -43,20 +41,8 @@
                             <li{% if active_nav == "control" %} class="active"{% endif %}><a href="/">Control</a></li>
                             <li{% if active_nav == "raw" %} class="active"{% endif %}><a href="/raw/">Raw</a></li>
                             <li{% if active_nav == "preview" %} class="active"{% endif %}><a href="/preview/">Preview</a></li>
-                            <!--<li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Action</a></li>
-                                    <li><a href="#">Another action</a></li>
-                                    <li><a href="#">Something else here</a></li>
-                                    <li class="divider"></li>
-                                    <li class="dropdown-header">Nav header</li>
-                                    <li><a href="#">About</a></li>
-                                    <li><a href="#">Contact</a></li>
-                                </ul>
-                            </li>-->
                         </ul>
-                    </div><!--/.nav-collapse -->
+                    </div>
                 </div>
             </div>
 
@@ -76,15 +62,14 @@ Page content goes here...
 
         <div id="footer">
             <div class="container">
-                <p class="text-muted credit">GoProApp v0.1</p>
+                <p class="text-muted credit">GoProApp v1.0</p>
             </div>
         </div>
 
         <!-- Placed at the end of the document so the pages load faster -->
         <script src="{{ STATIC_URL }}js/jquery-1.10.2.min.js"></script>
         <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
-        <script src="{{ STATIC_URL }}js/GoProSite.js"></script>
-        {% block extra_js %}
-        {% endblock extra_js %}
+        <script src="{{ STATIC_URL }}js/SyncedList.js"></script>
+        <script src="{{ STATIC_URL }}js/GoProApp.js"></script>
     </body>
 </html>
