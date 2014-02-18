@@ -10,6 +10,9 @@ echo "Configuring Django..."
 key=$(tr -dc "[:alpha:]" < /dev/urandom | head -c 48)
 sed "s/^SECRET_KEY =.*/SECRET_KEY = '$key'/g" GoProApp/settings.py --quiet
 python manage.py syncdb --noinput # remove --noinput to create a super user
+chmod a+rw sqlite3.db # so apache can write to the db
+chmod a+w ./ # so apache can write to the db
+
 
 echo "Pulling GoProController..."
 git submodule update --init

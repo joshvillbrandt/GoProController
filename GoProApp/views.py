@@ -79,8 +79,8 @@ def api(request, action = None):
             response['list'].append(data)
         
         # determine proxy health
-        camera_set = Camera.objects.filter(last_attempt__gte=timezone.now()-timedelta(seconds=30))
-        if len(camera_set) > 0:
+        camera_set_attempt = Camera.objects.filter(last_attempt__gte=timezone.now()-timedelta(seconds=30))
+        if len(camera_set) == 0 or len(camera_set_attempt) > 0:
             response['extra']['.proxy-health'] = "<span class=\"label label-default\">proxy is alive</span>"
         else:
             response['extra']['.proxy-health'] = "<span class=\"label label-danger\">proxy is dead</span>"
