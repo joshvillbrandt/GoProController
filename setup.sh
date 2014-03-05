@@ -24,6 +24,7 @@ apt-get install -y apache2 libapache2-mod-wsgi
 ln -s /home/$USER/GoProApp /home/GoProApp
 rm /etc/apache2/sites-enabled/000-default
 ln -s /home/GoProApp/GoProApp/apache.conf /etc/apache2/sites-enabled/GoProApp.conf
+ln -s /etc/apache2/mods-available/wsgi.* /etc/apache2/mods-enabled/
 service apache2 restart
 
 echo "Configuring Upstart..."
