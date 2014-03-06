@@ -2,7 +2,7 @@
 
 Controls multiple GoPros from a web page.
 
-This is a webo app that provides a front end for the [GoProController](https://github.com/joshvillbrandt/GoProController) python class. The app itself is built off of [django-quick-start-app](http://github.com/joshvillbrandt/django-quick-start-app).
+This is a web app that provides a front end for the [GoProController](https://github.com/joshvillbrandt/GoProController) python class. The app itself is built off of [django-quick-start-app](http://github.com/joshvillbrandt/django-quick-start-app).
 
 ## How it works
 
@@ -12,7 +12,7 @@ The website portion of GoProApp grabs the latest status data from the database a
 
 ## Setup
 
-This app originally required one to first create a Django, but the Django files are now integrated with the repo for easier deployment.
+This app originally required one to first create a Django project, but the Django files are now integrated with the repo for easier deployment.
 
 A bash script is also now included to perform the bulk of the required setup steps. This script is tested against Ubuntu 12.04. As a part of the setup procedure, an Apache config and Upstart config are installed into your system. If you do not want this, then take those steps out `setup.sh` before executing it.
 
