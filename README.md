@@ -21,7 +21,7 @@ sudo apt-get install git
 cd ~/
 git clone https://github.com/joshvillbrandt/GoProApp.git
 cd ~/GoProApp
-./setup.sh
+sudo ./setup.sh
 ```
 
 Upon completion of `setup.sh`, You should now be able to navigate to `http://localhost:80/` and see the GoProApp. The `GoProApp/proxy.py` file is also now running which continuously polls the cameras for their statuses and sends commands to the cameras as they are queued up in the server.
