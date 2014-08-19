@@ -4,7 +4,7 @@
 
 echo "Installing packages..."
 apt-get update
-apt-get install -y python python-pip
+apt-get install -y python python-pip python-dbus
 pip install -r requirements.txt
 
 echo "Configuring Django..."
@@ -22,7 +22,6 @@ git submodule update --init
 
 echo "Configuring Apache..."
 apt-get install -y apache2 libapache2-mod-wsgi
-ln -s /home/$USER/GoProApp /home/GoProApp
 rm /etc/apache2/sites-enabled/000-default
 ln -s /home/GoProApp/GoProApp/apache.conf /etc/apache2/sites-enabled/GoProApp.conf
 a2enmod wsgi
