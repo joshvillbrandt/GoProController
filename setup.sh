@@ -3,6 +3,7 @@
 # should be in the same directory as setup.py
 
 echo "Installing packages..."
+apt-get update
 apt-get install -y python python-pip
 pip install -r requirements.txt
 
