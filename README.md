@@ -20,7 +20,8 @@ A bash script is also now included to perform the bulk of the required setup ste
 sudo apt-get install git
 cd ~/
 git clone https://github.com/joshvillbrandt/GoProApp.git
-cd ~/GoProApp
+sudo ln -s GoProApp /home/GoProApp
+cd GoProApp
 sudo ./setup.sh
 ```
 
