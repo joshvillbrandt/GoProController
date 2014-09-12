@@ -4,7 +4,7 @@
 
 echo "Installing packages..."
 apt-get update
-apt-get install -y python python-dev python-pip python-dbus python-opencv
+apt-get install -y python python-dev python-pip python-dbus python-opencv dbus network-manager
 pip install -r requirements.txt
 
 echo "Configuring Django..."
