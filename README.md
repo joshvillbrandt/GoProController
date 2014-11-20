@@ -12,32 +12,29 @@ A user interface is available for this API as a standalone package. See [GoProCo
 
 The backbone of GoProApp is a program called `GoProProxy` that runs asynchronously to the server. This proxy periodically grabs the status of every camera in the database and sends commands to cameras when appropriate. The proxy uses [wifi](https://github.com/rockymeza/wifi) to jump between networks and [gopro](https://github.com/joshvillbrandt/gopro) to handle the communication to the cameras. A Django app is used to persist data from the proxy and serve API endpoints. 
 
-## Setup
-
-This app originally required one to first create a Django project, but the Django files are now integrated with the repo for easier deployment.
-
-A bash script is also now included to perform the bulk of the required setup steps. This script is tested against Ubuntu 12.04. As a part of the setup procedure, an Apache config and Upstart config are installed into your system. If you do not want this, then take those steps out `setup.sh` before executing it.
+## Production Setup
 
 First, download the code:
 
 ```bash
-git clone https://github.com/joshvillbrandt/GoProController.git
+git clone https://github.com/joshvillbrandt/GoProController.git ~/GoProController
 ```
 
-If you are running Ubuntu 12.04, use the `setup.sh` script to automatically set up the application:
+If you are running Ubuntu 12.04, use the `setup.sh` script to automatically set up the application in a production mode:
 
 ```bash
-sudo GoProController/setup.sh
+sudo ~/GoProController/setup.sh
 ```
 
 Upon completion of `setup.sh`, you should now be able to navigate to `http://localhost:80/` and see the API. In addition, the `GoProApp/proxy.py` file is also now running continuously to the local wifi adapter and communicate with the cameras.
 
-## Development
+## Development Setup
 
 To run GoProApp without Apache and Upstart, launch the site with the Django development server:
 
 ```bash
-cd GoProController
+git clone https://github.com/joshvillbrandt/GoProController.git ~/GoProController
+cd ~/GoProController
 pip install -r requirements.txt
 python manage.py runserver 0.0.0.0:8000
 ```
@@ -45,8 +42,12 @@ python manage.py runserver 0.0.0.0:8000
 In another terminal window, launch the proxy to communicate with the cameras:
 
 ```bash
-python GoProController/proxy.py
+python ~/GoProController/proxy.py
 ```
+
+## API
+
+todo
 
 ## Change History
 
@@ -66,7 +67,7 @@ This project uses [semantic versioning](http://semver.org/).
 
 * Initial release
 
-# Todo
+## Todo
 
 No new features are planned at this time.
 

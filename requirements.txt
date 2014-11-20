@@ -1,3 +1,4 @@
 django==1.5
 python-dateutil
-pil
+gopro
+djangorestframework

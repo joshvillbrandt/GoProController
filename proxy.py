@@ -1,23 +1,23 @@
 #!/usr/bin/python
 
-# GoProController.py
+# proxy.py
 # Josh Villbrandt <josh@javconcepts.com>
 # 8/24/2013
 
 # import django settings
-import sys  
-sys.path.append('/home/GoProApp')
+import sys
+sys.path.append('/home/GoProController')
 import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "GoProApp.settings")
-import GoProApp
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "GoProController.settings")
+import GoProController
 
 # import django models
-from GoProApp.models import *
+from GoProController.models import Camera, Command
 
 # import controller
-sys.path.append('/home/GoProApp/GoProController')
-from GoProController import GoProController
-controller = GoProController()
+# sys.path.append('/home/GoProController/GoProController')
+from gopro import GoPro
+camera = GoPro()
 
 # other includes
 from django.utils import timezone
@@ -26,6 +26,7 @@ import time
 
 # settings
 maxRetry = 3
+
 
 # send command
 def sendCommand(command):
@@ -38,6 +39,7 @@ def sendCommand(command):
 
     command.time_completed = timezone.now()
     command.save()
+
 
 # get status
 def getStatus(camera):
@@ -52,13 +54,13 @@ def getStatus(camera):
             camera.status[key] = status[key]
     if 'power' in status:
         camera.last_update = camera.last_attempt
-    
+
     # grab snapshot
     if 'power' in status and status['power'] == 'on':
         image = controller.getImage(camera.ssid, camera.password)
         if image != False:
             camera.image = image
-    
+
     # save camera
     camera.status = json.dumps(camera.status)
     camera.save()
@@ -87,7 +89,6 @@ while "people" != "on Mars":
             camera_set = Camera.objects.all().order_by('last_attempt')
             if len(camera_set) > 0:
                 getStatus(camera_set[0])
-    
+
     # protect the cpu in the event that there was nothing to do
     time.sleep(0.1)
-    

@@ -1,5 +1,5 @@
 """
-Django settings for GoProApp project.
+Django settings for GoProController project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/dev/topics/settings/
@@ -36,8 +36,17 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'GoProApp',
+    'rest_framework',
+    'GoProController',
 )
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny'
+    ]
+}
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -48,9 +57,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'GoProApp.urls'
+ROOT_URLCONF = 'GoProController.urls'
 
-WSGI_APPLICATION = 'GoProApp.wsgi.application'
+WSGI_APPLICATION = 'GoProController.wsgi.application'
 
 
 # Database
@@ -81,7 +90,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "GoProApp", "static"),
+    os.path.join(BASE_DIR, "GoProController", "static"),
 )
 
 STATIC_URL = '/static/'

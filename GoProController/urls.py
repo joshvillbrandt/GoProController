@@ -1,15 +1,43 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import url, include
+from django.contrib.auth.models import User
+from GoProController.models import Camera, Command
+from rest_framework import serializers, viewsets, routers
 
-from django.contrib import admin
-admin.autodiscover()
 
-from GoProApp import views
+# Serializers define the API representation.
+class CameraSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Camera
+        # fields = ('ssid', 'password', 'email', 'is_staff')
 
-urlpatterns = patterns('',
-    url(r'^$', views.control, name='control'),
-    url(r'^raw/$', views.raw, name='raw'),
-    url(r'^preview/$', views.preview, name='preview'),
-    url(r'^api/(.*)/$', views.api, name='api'),
-    
-    url(r'^admin/', include(admin.site.urls)),
-)
+
+class CommandSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Command
+
+
+# ViewSets define the view behavior.
+class CameraViewSet(viewsets.ModelViewSet):
+    queryset = Camera.objects.all()
+    serializer_class = CameraSerializer
+
+
+class CommandViewSet(viewsets.ModelViewSet):
+    queryset = Command.objects.all()
+    serializer_class = CommandSerializer
+
+
+# Routers provide a way of automatically determining the URL conf.
+router = routers.DefaultRouter()
+router.register(r'cameras', CameraViewSet)
+router.register(r'commands', CommandViewSet)
+
+
+# Wire up our API using automatic URL routing.
+# Additionally, we include login URLs for the browseable API.
+urlpatterns = [
+    url(r'^', include(router.urls)),
+    url(
+        r'^api-auth/',
+        include('rest_framework.urls', namespace='rest_framework'))
+]
