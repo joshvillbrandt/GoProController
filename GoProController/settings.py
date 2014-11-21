@@ -94,3 +94,5 @@ STATICFILES_DIRS = (
 )
 
 STATIC_URL = '/static/'
+
+WIFI_INTERFACE = 'wlan0'

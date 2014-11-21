@@ -4,30 +4,32 @@
 # Josh Villbrandt <josh@javconcepts.com>
 # 8/24/2013
 
-from gopro import GoPro
-from django.utils import timezone
 import django
 import logging
 import json
 import time
 import sys
 import os
+from gopro import GoPro
+from django.utils import timezone
+import subprocess
 
 # import django models
 sys.path.append('/home/GoProController')
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "GoProController.settings")
 django.setup()
+from django.conf import settings
 from GoProController.models import Camera, Command
 
 
-# asynchronous daemon to do our bidding
+# asynchronous daemon to do our` bidding
 class GoProProxy:
     maxRetries = 3
-    currentSSID = None
 
     # init
-    def __init__(self, log_level=logging.INFO):
+    def __init__(self, interface, log_level=logging.INFO):
         self.camera = GoPro()
+        self.wireless = Wireless(interface)
 
         # setup log
         log_format = '%(asctime)s   %(message)s'
@@ -37,13 +39,13 @@ class GoProProxy:
     def connect(self, camera):
         logging.info('GoProProxy.connect({}, {})'.format(
             camera.ssid, camera.password))
-        # jump to the new network if needed
-        if self.currentSSID != camera.ssid:
-            # look like we need to switch networks!
-            pass
 
-        # reconfigure the password in the camera instance
-        self.camera.password(camera.password)
+        # jump to a new network only if needed
+        if self.wireless.current() != camera.ssid:
+            self.wireless.connect(camera.ssid, camera.password)
+
+            # reconfigure the password in the camera instance
+            self.camera.password(camera.password)
 
     # send command
     def sendCommand(self, command):
@@ -109,7 +111,7 @@ class GoProProxy:
             # PRIORITY 1: send command for the current network on if possible
             command_set = Command.objects.filter(
                 time_completed__isnull=True,
-                camera__ssid__exact=self.currentSSID)
+                camera__ssid__exact=self.wireless.current())
             if len(command_set) > 0:
                 self.sendCommand(command_set[0])
                 if self.shouldBeOn(command_set[0]):
@@ -129,13 +131,49 @@ class GoProProxy:
                     camera_set = Camera.objects.all().order_by('last_attempt')
                     if len(camera_set) > 0:
                         self.getStatus(camera_set[0])
-                    pass
 
             # protect the cpu in the event that there was nothing to do
             time.sleep(0.1)
 
 
+# abstracts away the wifi details
+class Wireless:
+    # _interface = None
+    _currentSSID = None
+
+    # init
+    def __init__(self, interface):
+        pass
+        # self._interface = interface
+
+    # connect to a network
+    def connect(self, ssid, password):
+        response = self._cmd('nmcli dev wifi connect {} password {}'.format(
+            ssid, password))
+
+        if len(response) == 0:
+            self._currentSSID = ssid
+            return True
+        else:
+            return False
+
+    # disconnect from the current network
+    def disconnect(self):
+        # TODO
+        pass
+
+    # returned the ssid of the current network
+    def current(self):
+        # TODO: actually check the current SSID with a shell call
+        # nmcli dev wifi | grep yes
+        return self._currentSSID
+
+    # attempt to retrieve the iwlist response for a given ssid
+    def _cmd(self, cmd):
+        return subprocess.Popen(
+            cmd, shell=True, stdout=subprocess.PIPE).stdout.read()
+
 # run proxy if called directly
 if __name__ == '__main__':
-    proxy = GoProProxy()
+    proxy = GoProProxy(settings.WIFI_INTERFACE)
     proxy.run()
