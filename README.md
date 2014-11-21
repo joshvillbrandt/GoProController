@@ -10,7 +10,7 @@ A user interface is available for this API as a standalone package. See [GoProCo
 
 ## How it works
 
-The backbone of GoProApp is a program called `GoProProxy` that runs asynchronously to the server. This proxy periodically grabs the status of every camera in the database and sends commands to cameras when appropriate. The proxy uses [wifi](https://github.com/rockymeza/wifi) to jump between networks and [gopro](https://github.com/joshvillbrandt/gopro) to handle the communication to the cameras. A Django app is used to persist data from the proxy and serve API endpoints. 
+The backbone of GoProApp is a program called `GoProProxy` that runs asynchronously to the server. This proxy periodically grabs the status of every camera in the database and sends commands to cameras when appropriate. The proxy uses [wifi](https://github.com/rockymeza/wifi) to jump between networks and [gopro](https://github.com/joshvillbrandt/gopro) to handle the communication to the cameras. A Django app is used to persist data from the proxy and serve API endpoints.
 
 ## Production Setup
 
@@ -26,7 +26,7 @@ If you are running Ubuntu 12.04, use the `setup.sh` script to automatically set 
 sudo ~/GoProController/setup.sh
 ```
 
-Upon completion of `setup.sh`, you should now be able to navigate to `http://localhost:80/` and see the API. In addition, the `GoProApp/proxy.py` file is also now running continuously to the local wifi adapter and communicate with the cameras.
+Upon completion of `setup.sh`, you should now be able to navigate to [http://localhost/](http://localhost/) and see the API. In addition, the `GoProApp/proxy.py` file is also now running continuously to the local wifi adapter and communicate with the cameras.
 
 ## Development Setup
 
@@ -45,9 +45,20 @@ In another terminal window, launch the proxy to communicate with the cameras:
 python ~/GoProController/proxy.py
 ```
 
+You should now be able to navigate to [http://localhost:8000/](http://localhost:8000/) and see the API.
+
 ## API
 
-todo
+This API provides the following endpoints:
+
+Endpoint | Actions
+--- | ---
+`/cameras` | GET, POST
+`/cameras/:id` | GET, PUT
+`/commands`| GET, POST
+`/commands/:id` | GET, PUT
+
+The API if build on the [Django REST Framework](http://www.django-rest-framework.org/). Please reference their documentation for detailed querying information.
 
 ## Change History
 
@@ -56,8 +67,8 @@ This project uses [semantic versioning](http://semver.org/).
 ### v0.2.0 - 2014/11/??
 
 * Renamed project from `GoProApp` to `GoProController`
-* Added wireless control code for Linus systems
-* Refactored user interface out of the project
+* Added wireless control code for Linux systems
+* Refactored user interface out of the project and into [GoProControllerUI](https://github.com/joshvillbrandt/GoProControllerUI)
 
 ### v0.1.1 - 2014/09/11
 
