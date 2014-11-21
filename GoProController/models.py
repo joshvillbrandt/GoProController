@@ -1,5 +1,4 @@
 from django.db import models
-from datetime import datetime
 
 
 class Camera(models.Model):
@@ -11,7 +10,6 @@ class Camera(models.Model):
     image = models.TextField(blank=True)
     status = models.TextField(blank=True)
     connection_attempts = models.IntegerField(default=0)
-    connection_successes = models.IntegerField(default=0)
     connection_failures = models.IntegerField(default=0)
 
     def __unicode__(self):

@@ -1,5 +1,4 @@
 from django.conf.urls import url, include
-from django.contrib.auth.models import User
 from GoProController.models import Camera, Command
 from rest_framework import serializers, viewsets, routers
 
