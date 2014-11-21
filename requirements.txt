@@ -2,3 +2,4 @@ django==1.7.1
 python-dateutil
 gopro
 djangorestframework
+wifi

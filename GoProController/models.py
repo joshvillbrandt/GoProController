@@ -13,7 +13,7 @@ class Camera(models.Model):
     connection_failures = models.IntegerField(default=0)
 
     def __unicode__(self):
-        return self.name
+        return self.ssid
 
 
 class Command(models.Model):
