@@ -4,13 +4,12 @@ from rest_framework import serializers, viewsets, routers
 
 
 # Serializers define the API representation.
-class CameraSerializer(serializers.HyperlinkedModelSerializer):
+class CameraSerializer(serializers.ModelSerializer):
     class Meta:
         model = Camera
-        # fields = ('ssid', 'password', 'email', 'is_staff')
 
 
-class CommandSerializer(serializers.HyperlinkedModelSerializer):
+class CommandSerializer(serializers.ModelSerializer):
     class Meta:
         model = Command
 
@@ -27,7 +26,7 @@ class CommandViewSet(viewsets.ModelViewSet):
 
 
 # Routers provide a way of automatically determining the URL conf.
-router = routers.DefaultRouter()
+router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'cameras', CameraViewSet)
 router.register(r'commands', CommandViewSet)
 
