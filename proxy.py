@@ -10,15 +10,15 @@ import json
 import time
 import sys
 import os
-from gopro import GoPro
+from gopro import GoPro, Wireless
 from django.utils import timezone
 import subprocess
+from colorama import Fore
 
 # import django models
 sys.path.append('/home/GoProController')
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "GoProController.settings")
 django.setup()
-from django.conf import settings
 from GoProController.models import Camera, Command
 
 
@@ -27,9 +27,9 @@ class GoProProxy:
     maxRetries = 3
 
     # init
-    def __init__(self, interface, log_level=logging.INFO):
+    def __init__(self, log_level=logging.INFO):
         self.camera = GoPro()
-        self.wireless = Wireless(interface)
+        self.wireless = Wireless()
 
         # setup log
         log_format = '%(asctime)s   %(message)s'
@@ -37,12 +37,12 @@ class GoProProxy:
 
     # connect to the camera's network
     def connect(self, camera):
-        logging.info('GoProProxy.connect({}, {})'.format(
-            camera.ssid, camera.password))
+        logging.info('{}GoProProxy.connect({}, {}){}'.format(
+            Fore.CYAN, camera.ssid, camera.password, Fore.RESET))
 
         # jump to a new network only if needed
         if self.wireless.current() != camera.ssid:
-            self.wireless.connect(camera.ssid, camera.password)
+            self.wireless.connect(ssid=camera.ssid, password=camera.password)
 
             # reconfigure the password in the camera instance
             self.camera.password(camera.password)
@@ -136,44 +136,7 @@ class GoProProxy:
             time.sleep(0.1)
 
 
-# abstracts away the wifi details
-class Wireless:
-    # _interface = None
-    _currentSSID = None
-
-    # init
-    def __init__(self, interface):
-        pass
-        # self._interface = interface
-
-    # connect to a network
-    def connect(self, ssid, password):
-        response = self._cmd('nmcli dev wifi connect {} password {}'.format(
-            ssid, password))
-
-        if len(response) == 0:
-            self._currentSSID = ssid
-            return True
-        else:
-            return False
-
-    # disconnect from the current network
-    def disconnect(self):
-        # TODO
-        pass
-
-    # returned the ssid of the current network
-    def current(self):
-        # TODO: actually check the current SSID with a shell call
-        # nmcli dev wifi | grep yes
-        return self._currentSSID
-
-    # attempt to retrieve the iwlist response for a given ssid
-    def _cmd(self, cmd):
-        return subprocess.Popen(
-            cmd, shell=True, stdout=subprocess.PIPE).stdout.read()
-
 # run proxy if called directly
 if __name__ == '__main__':
-    proxy = GoProProxy(settings.WIFI_INTERFACE)
+    proxy = GoProProxy()
     proxy.run()
