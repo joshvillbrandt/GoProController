@@ -7,6 +7,7 @@ class Camera(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
     last_attempt = models.DateTimeField(auto_now=True)
     last_update = models.DateTimeField(null=True, blank=True)
+    image_last_update = models.DateTimeField(null=True, blank=True)
     image = models.TextField(blank=True)
     status = models.TextField(blank=True)
     connection_attempts = models.IntegerField(default=0)

@@ -10,7 +10,8 @@ import json
 import time
 import sys
 import os
-from gopro import GoPro, Wireless
+from gopro import GoPro
+from wireless import Wireless
 from django.utils import timezone
 import subprocess
 from colorama import Fore
@@ -85,10 +86,11 @@ class GoProProxy:
             self.updateCounters(camera, False)
 
         # grab snapshot
-        # if 'power' in status and status['power'] == 'on':
-        #     image = controller.getImage(camera.ssid, camera.password)
-        #     if image is not False:
-        #         camera.image = image
+        if 'power' in status and status['power'] == 'on':
+            image = self.camera.image()
+            if image is not False:
+                camera.image = image
+                camera.image_last_update = camera.last_attempt
 
         # save result
         camera.save()

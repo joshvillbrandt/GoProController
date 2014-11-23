@@ -1,6 +1,7 @@
 django==1.7.1
 python-dateutil
 gopro
+wireless
 djangorestframework
 django-cors-headers
 colorama
