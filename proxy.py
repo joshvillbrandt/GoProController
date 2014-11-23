@@ -38,59 +38,76 @@ class GoProProxy:
 
     # connect to the camera's network
     def connect(self, camera):
-        logging.info('{}GoProProxy.connect({}, {}){}'.format(
-            Fore.CYAN, camera.ssid, camera.password, Fore.RESET))
+        func_str = 'GoProProxy.connect({}, {})'.format(
+            camera.ssid, camera.password)
 
         # jump to a new network only if needed
         if self.wireless.current() != camera.ssid:
-            self.wireless.connect(ssid=camera.ssid, password=camera.password)
+            r = self.wireless.connect(
+                ssid=camera.ssid, password=camera.password)
 
+        # evaluate connection request
+        if self.wireless.current() == camera.ssid:
             # reconfigure the password in the camera instance
             self.camera.password(camera.password)
+
+            logging.info('{}{}{}'.format(Fore.CYAN, func_str, Fore.RESET))
+            return True
+        else:
+            logging.info('{}{} - network not found{}'.format(
+                Fore.YELLOW, func_str, Fore.RESET))
+            return False
 
     # send command
     def sendCommand(self, command):
         # make sure we are connected to the right camera
-        self.connect(command.camera)
+        if self.connect(command.camera):
+            # try to send the command, a few times if needed
+            i = 0
+            result = False
+            while i < self.maxRetries and result is False:
+                result = self.camera.command(command.command, command.value)
+                i += 1
+            command.time_completed = timezone.now()
 
-        # try to send the command, a few times if needed
-        i = 0
-        result = False
-        while i < self.maxRetries and result is False:
-            result = self.camera.command(command.command, command.value)
-            i += 1
-        command.time_completed = timezone.now()
+            # did we successfully talk to the camera?
+            self.updateCounters(command.camera, result)
 
-        # did we successfully talk to the camera?
-        self.updateCounters(command.camera, result)
-
-        # save result
-        command.save()
+            # save result
+            command.save()
 
     # get status
     def getStatus(self, camera):
         # make sure we are connected to the right camera
-        self.connect(camera)
-
-        # try to get the camera's status
         camera.last_attempt = timezone.now()
-        status = self.camera.status()
-        camera.status = json.dumps(status)
+        connected = self.connect(camera)
 
-        # did we successfully talk to the camera?
-        if 'power' in status:
-            # power only shows up if we received feedback from the cam
+        # could we find the camera?
+        if connected:
+            # update counters
             camera.last_update = camera.last_attempt
             self.updateCounters(camera, True)
+
+            # try to get the camera's status
+            status = self.camera.status()
+            camera.summary = status['summary']
+
+            # do this stuff only when the camera is powered on
+            if 'power' in status and status['power'] == 'on':
+                # save full status only when the camera is on
+                camera.status = json.dumps(status)
+
+                # grab snapshot
+                image = self.camera.image()
+                if image is not False:
+                    camera.image = image
+                    camera.image_last_update = camera.last_attempt
         else:
+            # update counters
             self.updateCounters(camera, False)
 
-        # grab snapshot
-        if 'power' in status and status['power'] == 'on':
-            image = self.camera.image()
-            if image is not False:
-                camera.image = image
-                camera.image_last_update = camera.last_attempt
+            # update status
+            camera.summary = 'notfound'
 
         # save result
         camera.save()
