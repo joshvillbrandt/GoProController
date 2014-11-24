@@ -78,9 +78,9 @@ This project uses [semantic versioning](http://semver.org/).
 
 * Initial release
 
-## Todo
+## Known Issues
 
-No new features are planned at this time.
+There is a memory that will cause the program to crash after a couple hours of use with two or more cameras. (It will crash quicker with just one camera.) I've spent a few hours trying to track down the issue to no avail. It seems as though there are uncollectable objects from both the Django side and the GoPro/urllib2 side. I tried replacing urllib2 with python-requests/urllib3, but that didn't help. I used [gc](https://docs.python.org/2/library/gc.html) and [objgraph](http://neverfear.org/blog/view/155/Investigating_memory_leaks_in_Python) to help debug.
 
 ## Contributions
 
