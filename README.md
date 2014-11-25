@@ -12,7 +12,7 @@ A user interface is available for this API as a standalone package. See [GoProCo
 
 The backbone of GoProApp is a program called `GoProProxy` that runs asynchronously to the server. This proxy periodically grabs the status of every camera in the database and sends commands to cameras when appropriate. The proxy uses [wifi](https://github.com/rockymeza/wifi) to jump between networks and [gopro](https://github.com/joshvillbrandt/gopro) to handle the communication to the cameras. A Django app is used to persist data from the proxy and serve API endpoints.
 
-## Production Setup
+## Production Setup (Ubuntu)
 
 First, download the code:
 
@@ -28,7 +28,21 @@ sudo ~/GoProController/setup.sh
 
 Upon completion of `setup.sh`, you should now be able to navigate to [http://localhost/](http://localhost/) and see the API. In addition, the `GoProApp/proxy.py` file is also now running continuously to the local wifi adapter and communicate with the cameras.
 
-## Development Setup
+You can interact with the server and proxy using `service` and `initctl`:
+
+```bash
+sudo service apache2 status
+sudo initctl status gopro-proxy
+```
+
+Logs for both are also available:
+
+```bash
+tail /var/log/apache2/error.log
+tail -f /var/log/gopro-proxy.log
+```
+
+## Development Setup (Ubuntu, Mac)
 
 To run GoProApp without Apache and Upstart, launch the site with the Django development server:
 
@@ -42,7 +56,7 @@ python manage.py runserver 0.0.0.0:8000
 In another terminal window, launch the proxy to communicate with the cameras:
 
 ```bash
-python ~/GoProController/proxy.py
+sudo python ~/GoProController/proxy.py # sudo needed for logging
 ```
 
 You should now be able to navigate to [http://localhost:8000/](http://localhost:8000/) and see the API.
@@ -64,11 +78,11 @@ The API if build on the [Django REST Framework](http://www.django-rest-framework
 
 This project uses [semantic versioning](http://semver.org/).
 
-### v0.2.0 - 2014/11/??
+### v0.2.0 - 2014/11/24
 
 * Renamed project from `GoProApp` to `GoProController`
-* Added wireless control code for Linux systems
 * Refactored user interface out of the project and into [GoProControllerUI](https://github.com/joshvillbrandt/GoProControllerUI)
+* Now contains a RESTful API for cameras and commands
 
 ### v0.1.1 - 2014/09/11
 

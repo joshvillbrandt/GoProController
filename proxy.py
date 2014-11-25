@@ -33,8 +33,17 @@ class GoProProxy:
         self.wireless = Wireless()
 
         # setup log
+        log_file = '/var/log/gopro-proxy.log'
         log_format = '%(asctime)s   %(message)s'
         logging.basicConfig(format=log_format, level=log_level)
+
+        # file logging
+        fh = logging.FileHandler(log_file)
+        fh.setLevel(log_level)
+        fh.setFormatter(logging.Formatter(log_format))
+        logger = logging.getLogger()
+        logger.setLevel(log_level)
+        logger.addHandler(fh)
 
     # connect to the camera's network
     def connect(self, camera):
@@ -92,12 +101,23 @@ class GoProProxy:
             status = self.camera.status()
             camera.summary = status['summary']
 
-            # do this stuff only when the camera is powered on
-            if 'power' in status and status['power'] == 'on':
-                # save full status only when the camera is on
-                camera.status = json.dumps(status)
+            # extend existing status if possible
+            if camera.status != '':
+                # allows us to retain knowledge of settings when powered off
+                try:
+                    old_status = json.loads(camera.status)
+                    if old_status != '':
+                        old_status.update(status)
+                        status = old_status
+                except ValueError:
+                    logging.info('{}{} - existing status malformed{}'.format(
+                        Fore.YELLOW, 'GoProProxy.getStatus()', Fore.RESET))
 
-                # grab snapshot
+            # save status to camera
+            camera.status = json.dumps(status)
+
+            # grab snapshot when the camera is powered on
+            if 'power' in status and status['power'] == 'on':
                 image = self.camera.image()
                 if image is not False:
                     camera.image = image
@@ -122,7 +142,7 @@ class GoProProxy:
 
     # main loop
     def run(self):
-        logging.info('GoProProxy.run()')
+        logging.info('{}GoProProxy.run(){}'.format(Fore.GREEN, Fore.RESET))
         # keep running until we land on Mars
         # keep the contents of this loop short (limit to one cmd/status or one
         # status) so that we can quickly catch KeyboardInterrupt, SystemExit
