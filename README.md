@@ -63,7 +63,7 @@ python manage.py runserver 0.0.0.0:8000
 In another terminal window, launch the proxy to communicate with the cameras:
 
 ```bash
-sudo python ~/GoProController/proxy.py # sudo needed for logging
+sudo python ~/GoProController/proxy.py # sudo needed for logging (or add yourself to syslog in Ubuntu)
 ```
 
 You should now be able to navigate to [http://localhost:8000/](http://localhost:8000/) and see the API.
