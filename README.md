@@ -18,12 +18,13 @@ First, download the code:
 
 ```bash
 git clone https://github.com/joshvillbrandt/GoProController.git ~/GoProController
+sudo ln -s ~/GoProController /home/GoProController
 ```
 
 If you are running Ubuntu 12.04, use the `setup.sh` script to automatically set up the application in a production mode:
 
 ```bash
-sudo ~/GoProController/setup.sh
+sudo /home/GoProController/setup.sh
 ```
 
 Upon completion of `setup.sh`, you should now be able to navigate to [http://localhost/](http://localhost/) and see the API. In addition, the `GoProApp/proxy.py` file is also now running continuously to the local wifi adapter and communicate with the cameras.
@@ -40,6 +41,12 @@ Logs for both are also available:
 ```bash
 tail /var/log/apache2/error.log
 tail -f /var/log/gopro-proxy.log
+```
+
+To set a specific interface for wifi control, add the following to [upstart.conf](upstart.conf):
+
+```
+env GOPRO_WIFI_INTERFACE=wlan1
 ```
 
 ## Development Setup (Ubuntu, Mac)
@@ -60,6 +67,12 @@ sudo python ~/GoProController/proxy.py # sudo needed for logging
 ```
 
 You should now be able to navigate to [http://localhost:8000/](http://localhost:8000/) and see the API.
+
+To set a specific interface for wifi control, add the following environment variable before the proxy command:
+
+```bash
+sudo GOPRO_WIFI_INTERFACE='wlan1' python ~/GoProController/proxy.py
+```
 
 ## API
 

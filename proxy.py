@@ -29,8 +29,12 @@ class GoProProxy:
 
     # init
     def __init__(self, log_level=logging.INFO):
+        # setup camera
         self.camera = GoPro()
-        self.wireless = Wireless()
+
+        # setup wireless
+        interface = os.environ.get('GOPRO_WIFI_INTERFACE', None)
+        self.wireless = Wireless(interface)
 
         # setup log
         log_file = '/var/log/gopro-proxy.log'
