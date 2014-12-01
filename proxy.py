@@ -10,7 +10,7 @@ import json
 import time
 import sys
 import os
-from gopro import GoPro
+from goprohero import GoProHero
 from wireless import Wireless
 from django.utils import timezone
 import subprocess
@@ -30,7 +30,7 @@ class GoProProxy:
     # init
     def __init__(self, log_level=logging.INFO):
         # setup camera
-        self.camera = GoPro()
+        self.camera = GoProHero()
 
         # setup wireless
         interface = os.environ.get('GOPRO_WIFI_INTERFACE', None)

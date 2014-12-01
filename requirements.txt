@@ -1,7 +1,7 @@
+goprohero==0.2.2
+wireless==0.2.0
 django==1.7.1
-python-dateutil
-gopro
-wireless
 djangorestframework
 django-cors-headers
+python-dateutil
 colorama

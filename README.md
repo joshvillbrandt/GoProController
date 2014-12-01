@@ -4,13 +4,13 @@ An http API to control multiple GoPro cameras over wifi.
 
 ## Description
 
-This program can be used to control multiple GoPro cameras via the [gopro](https://github.com/joshvillbrandt/gopro) Python library. When ran from a Linux machine with compatible wireless card, this program is capable of automatically negotiating between the different ad-hoc wireless networks that each cameras makes.
+This program can be used to control multiple GoPro cameras via the [goprohero](https://github.com/joshvillbrandt/goprohero) Python library. When ran from a Linux machine with compatible wireless card, this program is capable of automatically negotiating between the different ad-hoc wireless networks that each cameras makes.
 
 A user interface is available for this API as a standalone package. See [GoProControllerUI](https://github.com/joshvillbrandt/GoProControllerUI).
 
 ## How it works
 
-The backbone of GoProApp is a program called `GoProProxy` that runs asynchronously to the server. This proxy periodically grabs the status of every camera in the database and sends commands to cameras when appropriate. The proxy uses [wifi](https://github.com/rockymeza/wifi) to jump between networks and [gopro](https://github.com/joshvillbrandt/gopro) to handle the communication to the cameras. A Django app is used to persist data from the proxy and serve API endpoints.
+The backbone of GoProApp is a program called `GoProProxy` that runs asynchronously to the server. This proxy periodically grabs the status of every camera in the database and sends commands to cameras when appropriate. The proxy uses [wifi](https://github.com/rockymeza/wifi) to jump between networks and [goprohero](https://github.com/joshvillbrandt/goprohero) to handle the communication to the cameras. A Django app is used to persist data from the proxy and serve API endpoints.
 
 ## Production Setup (Ubuntu)
 
@@ -90,6 +90,11 @@ The API if build on the [Django REST Framework](http://www.django-rest-framework
 ## Change History
 
 This project uses [semantic versioning](http://semver.org/).
+
+### v0.2.1 - future
+
+* Updated for library change from `gopro` to `goprohero`
+* TODO: Added the `/config` endpoint
 
 ### v0.2.0 - 2014/11/24
 
