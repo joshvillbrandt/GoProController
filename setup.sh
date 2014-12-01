@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # should be in the same directory as requirements.txt
+cd /home/GoProController
 
 echo "Installing packages..."
 apt-get update
