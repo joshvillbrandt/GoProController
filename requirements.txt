@@ -1,4 +1,4 @@
-goprohero==0.2.2
+goprohero==0.2.3
 wireless==0.2.0
 django==1.7.1
 djangorestframework
