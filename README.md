@@ -1,4 +1,4 @@
-# GoProApp
+# GoProController
 
 An http API to control multiple GoPro cameras over wifi.
 
@@ -11,6 +11,10 @@ A user interface is available for this API as a standalone package. See [GoProCo
 ## How it works
 
 The backbone of GoProApp is a program called `GoProProxy` that runs asynchronously to the server. This proxy periodically grabs the status of every camera in the database and sends commands to cameras when appropriate. The proxy uses [wifi](https://github.com/rockymeza/wifi) to jump between networks and [goprohero](https://github.com/joshvillbrandt/goprohero) to handle the communication to the cameras. A Django app is used to persist data from the proxy and serve API endpoints.
+
+![diagram](diagram.png)
+
+Note: The xml version of the above diagram can be modified with [https://www.draw.io/](https://www.draw.io/).
 
 ## Production Setup (Ubuntu)
 
@@ -91,10 +95,12 @@ The API if build on the [Django REST Framework](http://www.django-rest-framework
 
 This project uses [semantic versioning](http://semver.org/).
 
-### v0.2.1 - future
+### v0.2.1 - 2014/12/01
 
 * Updated for library change from `gopro` to `goprohero`
+* Fixed bugs in `setup.sh`
 * TODO: Added the `/config` endpoint
+* TODO: Added support to serve [GoProControllerUI](https://github.com/joshvillbrandt/GoProControllerUI) static content from the same machine
 
 ### v0.2.0 - 2014/11/24
 
