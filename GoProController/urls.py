@@ -1,6 +1,9 @@
+import json
 from django.conf.urls import url, include
 from GoProController.models import Camera, Command
 from rest_framework import serializers, viewsets, routers
+from django.http import HttpResponse
+from goprohero import GoProHero
 
 
 # Serializers define the API representation.
@@ -31,11 +34,14 @@ router.register(r'cameras', CameraViewSet)
 router.register(r'commands', CommandViewSet)
 
 
+# A view to return the GoProHero config dictionary
+def ConfigView(request):
+    data = GoProHero.config()
+    return HttpResponse(json.dumps(data), content_type="application/json")
+
+
 # Wire up our API using automatic URL routing.
-# Additionally, we include login URLs for the browseable API.
 urlpatterns = [
     url(r'^', include(router.urls)),
-    url(
-        r'^api-auth/',
-        include('rest_framework.urls', namespace='rest_framework'))
+    url(r'^config', ConfigView)
 ]
