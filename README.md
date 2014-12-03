@@ -25,7 +25,7 @@ git clone https://github.com/joshvillbrandt/GoProController.git ~/GoProControlle
 sudo ln -s ~/GoProController /home/GoProController
 ```
 
-If you are running Ubuntu 12.04, use the `setup.sh` script to automatically set up the application in a production mode:
+If you are running Ubuntu, use the `setup.sh` script to automatically set up the application in a production mode:
 
 ```bash
 sudo /home/GoProController/setup.sh
@@ -95,12 +95,13 @@ The API if build on the [Django REST Framework](http://www.django-rest-framework
 
 This project uses [semantic versioning](http://semver.org/).
 
-### v0.2.1 - 2014/12/01
+### v0.2.1 - 2014/12/03
 
 * Updated for library change from `gopro` to `goprohero`
 * Fixed bugs in `setup.sh`
-* TODO: Added the `/config` endpoint
-* TODO: Added support to serve [GoProControllerUI](https://github.com/joshvillbrandt/GoProControllerUI) static content from the same machine
+* Moved API root to `/api`
+* Added the `/api/config` endpoint
+* Added support to serve [GoProControllerUI](https://github.com/joshvillbrandt/GoProControllerUI) static content at `/`
 
 ### v0.2.0 - 2014/11/24
 
