@@ -99,7 +99,7 @@ This project uses [semantic versioning](http://semver.org/).
 
 * Updated for library change from `gopro` to `goprohero`
 * Fixed bugs in `setup.sh`
-* Moved API root to `/api`
+* Moved API root to `/api` when using the Apache config
 * Added the `/api/config` endpoint
 * Added support to serve [GoProControllerUI](https://github.com/joshvillbrandt/GoProControllerUI) static content at `/`
 
