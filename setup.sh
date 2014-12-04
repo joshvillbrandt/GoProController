@@ -15,7 +15,7 @@ sed "s/^SECRET_KEY =.*/SECRET_KEY = '$key'/g" GoProController/settings.py --quie
 python manage.py syncdb --noinput # remove --noinput to create a super user
 chmod a+rw sqlite3.db # so apache can write to the db
 chmod a+w ./ # so apache can write to the db
-python manage.py collectstatic # for the Django REST framework
+python manage.py collectstatic --noinput # for the Django REST framework
 
 # remove the steps below if you don't want Apache and Upstart
 
