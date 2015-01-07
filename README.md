@@ -95,6 +95,12 @@ The API if build on the [Django REST Framework](http://www.django-rest-framework
 
 This project uses [semantic versioning](http://semver.org/).
 
+### v0.2.2 - 2015/01/06
+
+* Pagination is now supported; try `?page=1&limit=20`
+* Basic sorting/ordering is now supported; try `?ordering=-date_added`
+* Fixed a schema bug that prevented commands without values from being saved (commands like `delete_all` and `delete_last`)
+
 ### v0.2.1 - 2014/12/03
 
 * Updated for library change from `gopro` to `goprohero`
