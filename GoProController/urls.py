@@ -1,7 +1,7 @@
 import json
 from django.conf.urls import url, include
 from GoProController.models import Camera, Command
-from rest_framework import serializers, viewsets, routers
+from rest_framework import serializers, viewsets, routers, filters
 from django.http import HttpResponse
 from goprohero import GoProHero
 
@@ -21,11 +21,13 @@ class CommandSerializer(serializers.ModelSerializer):
 class CameraViewSet(viewsets.ModelViewSet):
     queryset = Camera.objects.all()
     serializer_class = CameraSerializer
+    filter_backends = (filters.OrderingFilter,)
 
 
 class CommandViewSet(viewsets.ModelViewSet):
     queryset = Command.objects.all()
     serializer_class = CommandSerializer
+    filter_backends = (filters.OrderingFilter,)
 
 
 # Routers provide a way of automatically determining the URL conf.
