@@ -21,7 +21,7 @@ class Camera(models.Model):
 class Command(models.Model):
     camera = models.ForeignKey(Camera)
     command = models.CharField(max_length=255)
-    value = models.CharField(max_length=255)
+    value = models.CharField(max_length=255, blank=True)
     date_added = models.DateTimeField(auto_now_add=True)
     time_completed = models.DateTimeField(null=True, blank=True)
 

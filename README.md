@@ -95,6 +95,11 @@ The API if build on the [Django REST Framework](http://www.django-rest-framework
 
 This project uses [semantic versioning](http://semver.org/).
 
+### v0.2.2 - 2015/01/14
+
+* Updated `goprohero` and `wireless` library versions
+* Fixed a bug prevent commands without values from being POSTed successfully
+
 ### v0.2.1 - 2014/12/03
 
 * Updated for library change from `gopro` to `goprohero`

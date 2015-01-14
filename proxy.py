@@ -147,6 +147,8 @@ class GoProProxy:
     # main loop
     def run(self):
         logging.info('{}GoProProxy.run(){}'.format(Fore.GREEN, Fore.RESET))
+        logging.info('Wifi interface: {}, wifi driver: {}'.format(
+            self.wireless.interface(), self.wireless.driver()))
         # keep running until we land on Mars
         # keep the contents of this loop short (limit to one cmd/status or one
         # status) so that we can quickly catch KeyboardInterrupt, SystemExit

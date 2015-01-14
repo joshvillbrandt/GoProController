@@ -1,5 +1,5 @@
-goprohero==0.2.5
-wireless==0.2.1
+goprohero==0.2.6
+wireless==0.3.0
 django==1.7.1
 djangorestframework
 django-cors-headers
