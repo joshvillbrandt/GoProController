@@ -95,6 +95,10 @@ The API if build on the [Django REST Framework](http://www.django-rest-framework
 
 This project uses [semantic versioning](http://semver.org/).
 
+### v0.2.4 - future
+
+* Add `GOPRO_SNAPSHOTS` environment flag to turn off grabbing snapshots images if desired
+
 ### v0.2.3 - 2015/01/14
 
 * Updated `goprohero` and `wireless` library versions

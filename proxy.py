@@ -13,7 +13,6 @@ import os
 from goprohero import GoProHero
 from wireless import Wireless
 from django.utils import timezone
-import subprocess
 from colorama import Fore
 
 # import django models
@@ -57,7 +56,7 @@ class GoProProxy:
 
         # jump to a new network only if needed
         if self.wireless.current() != camera.ssid:
-            r = self.wireless.connect(
+            self.wireless.connect(
                 ssid=camera.ssid, password=camera.password)
 
         # evaluate connection request
