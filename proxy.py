@@ -2,7 +2,7 @@
 
 # proxy.py
 # Josh Villbrandt <josh@javconcepts.com>
-# 8/24/2013
+# 2013/08/24
 
 import django
 import logging
@@ -29,13 +29,6 @@ class GoProProxy:
 
     # init
     def __init__(self, log_level=logging.INFO):
-        # setup camera
-        self.camera = GoProHero()
-
-        # setup wireless
-        interface = os.environ.get('GOPRO_WIFI_INTERFACE', None)
-        self.wireless = Wireless(interface)
-
         # setup log
         log_file = '/var/log/gopro-proxy.log'
         log_format = '%(asctime)s   %(message)s'
@@ -48,6 +41,14 @@ class GoProProxy:
         logger = logging.getLogger()
         logger.setLevel(log_level)
         logger.addHandler(fh)
+
+        # setup camera
+        self.camera = GoProHero()
+        self.snapshots = os.environ.get('GOPRO_SNAPSHOTS', True)
+
+        # setup wireless
+        interface = os.environ.get('GOPRO_WIFI_INTERFACE', None)
+        self.wireless = Wireless(interface)
 
     # connect to the camera's network
     def connect(self, camera):
@@ -121,7 +122,9 @@ class GoProProxy:
             camera.status = json.dumps(status)
 
             # grab snapshot when the camera is powered on
-            if 'power' in status and status['power'] == 'on':
+            if self.snapshots is True and 'power' in status \
+                    and status['power'] == 'on':
+                camera.save()
                 image = self.camera.image()
                 if image is not False:
                     camera.image = image
@@ -149,6 +152,8 @@ class GoProProxy:
         logging.info('{}GoProProxy.run(){}'.format(Fore.GREEN, Fore.RESET))
         logging.info('Wifi interface: {}, wifi driver: {}'.format(
             self.wireless.interface(), self.wireless.driver()))
+        logging.info('Attempt snapshots: {}'.format(self.snapshots))
+
         # keep running until we land on Mars
         # keep the contents of this loop short (limit to one cmd/status or one
         # status) so that we can quickly catch KeyboardInterrupt, SystemExit
