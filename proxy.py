@@ -73,21 +73,22 @@ class GoProProxy:
 
     # send command
     def sendCommand(self, command):
+        result = False
+
         # make sure we are connected to the right camera
         if self.connect(command.camera):
             # try to send the command, a few times if needed
             i = 0
-            result = False
             while i < self.maxRetries and result is False:
                 result = self.camera.command(command.command, command.value)
                 i += 1
-            command.time_completed = timezone.now()
 
-            # did we successfully talk to the camera?
-            self.updateCounters(command.camera, result)
+        # did we successfully talk to the camera?
+        self.updateCounters(command.camera, result)
 
-            # save result
-            command.save()
+        # save result
+        command.time_completed = timezone.now()
+        command.save()
 
     # get status
     def getStatus(self, camera):
