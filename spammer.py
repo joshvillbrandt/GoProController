@@ -9,7 +9,6 @@ import argparse
 import django
 import logging
 import copy
-import json
 import time
 import sys
 import os
@@ -54,48 +53,57 @@ class GoProSpammer:
         parser.add_argument(
             '-v, --value', dest='value',
             help='the value to set the parameter to')
+        # parser.add_argument(
+        #     '-f, --file', dest='file',
+        #     help='a timeline file with each line as "time, param, value"')
+        # parser.add_argument(
+        #     '-t, --time', dest='time', type=int,
+        #     help='elapsed time at init in seconds; ' +
+        #     'defaults to the lowest time in --file')
         args = parser.parse_args()
         self.interval = args.interval
         self.param = args.param
         self.value = args.value
+        # self.file = args.file
+        # self.time = args.time
 
     # spam the command
     def spam(self):
-        logging.info('spam check')
         if self.param is not None and self.param is not 'status':
             queued_commands = Command.objects.filter(
                 time_completed__isnull=True)
 
             # only add another round of commands if command queue is empty
             if len(queued_commands) == 0:
-                logging.info('{}{} {}={}{}'.format(
-                    Fore.CYAN,
-                    'Empty command queue; spamming',
+                logging.info('{}{} "{}={}"{}'.format(
+                    Fore.RESET,
+                    'Command queue empty; setting',
                     self.param,
                     self.value,
                     Fore.RESET))
                 cameras = Camera.objects.all()
                 for camera in cameras:
+                    param = self.param
+                    value = self.value
+
+                    # override the command if the camera isn't powered on
+                    if self.param != 'power' and (
+                            camera.summary != 'on' and
+                            camera.summary != 'recording'):
+                        param = 'power'
+                        value = 'on'
+
                     # create a command just for this camera
                     command = Command(
-                        camera=camera, command=self.param, value=self.value)
+                        camera=camera, command=param, value=value)
                     command.save()
 
     # report status of all cameras
     def getStatus(self):
-        statuses = {}
-        # get status of all cameras
-        cameras = Camera.objects.all()
+        statuses = []
+        cameras = Camera.objects.order_by('ssid')
         for camera in cameras:
-            # we only care about power and record here
-            status = json.loads(camera.status)
-            if 'power' in status:
-                if 'record' in status and status['record'] == 'on':
-                    statuses[camera.ssid] = 'record'
-                else:
-                    statuses[camera.ssid] = status['power']
-            else:
-                statuses[camera.ssid] = 'off'
+            statuses.append([camera.ssid, camera.summary])
 
         return statuses
 
@@ -103,10 +111,12 @@ class GoProSpammer:
     def printStatus(self):
         # color statuses
         colored = []
-        for ssid, status in self.statuses.iteritems():
+        for group in self.statuses:
+            ssid = group[0]
+            status = group[1]
             color = None
 
-            if status == 'record':
+            if status == 'recording':
                 color = Fore.RED
             elif status == 'on':
                 color = Fore.GREEN
@@ -119,7 +129,7 @@ class GoProSpammer:
                 color, ssid, Fore.RESET))
 
         # now print
-        logging.info('Status: {}'.format(', '.join(colored)))
+        logging.info('Status change: {}'.format(', '.join(colored)))
 
     # report status of all cameras
     def status(self):
@@ -134,7 +144,7 @@ class GoProSpammer:
     # main loop
     def run(self):
         logging.info('{}GoProSpammer.run(){}'.format(Fore.GREEN, Fore.RESET))
-        logging.info('Interval: {}'.format(self.interval))
+        logging.info('Interval: {}s'.format(self.interval))
 
         # keep running until we land on Mars
         last = None
