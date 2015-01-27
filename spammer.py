@@ -58,107 +58,27 @@ class GoProSpammer:
         self.param = args.param
         self.value = args.value
 
-    # # connect to the camera's network
-    # def connect(self, camera):
-    #     func_str = 'GoProProxy.connect({}, {})'.format(
-    #         camera.ssid, camera.password)
-
-    #     # jump to a new network only if needed
-    #     if self.wireless.current() != camera.ssid:
-    #         r = self.wireless.connect(
-    #             ssid=camera.ssid, password=camera.password)
-
-    #     # evaluate connection request
-    #     if self.wireless.current() == camera.ssid:
-    #         # reconfigure the password in the camera instance
-    #         self.camera.password(camera.password)
-
-    #         logging.info('{}{}{}'.format(Fore.CYAN, func_str, Fore.RESET))
-    #         return True
-    #     else:
-    #         logging.info('{}{} - network not found{}'.format(
-    #             Fore.YELLOW, func_str, Fore.RESET))
-    #         return False
-
-    # # send command
-    # def sendCommand(self, command):
-    #     # make sure we are connected to the right camera
-    #     if self.connect(command.camera):
-    #         # try to send the command, a few times if needed
-    #         i = 0
-    #         result = False
-    #         while i < self.maxRetries and result is False:
-    #             result = self.camera.command(command.command, command.value)
-    #             i += 1
-    #         command.time_completed = timezone.now()
-
-    #         # did we successfully talk to the camera?
-    #         self.updateCounters(command.camera, result)
-
-    #         # save result
-    #         command.save()
-
-    # # get status
-    # def getStatus(self, camera):
-    #     # make sure we are connected to the right camera
-    #     camera.last_attempt = timezone.now()
-    #     connected = self.connect(camera)
-
-    #     # could we find the camera?
-    #     if connected:
-    #         # update counters
-    #         camera.last_update = camera.last_attempt
-    #         self.updateCounters(camera, True)
-
-    #         # try to get the camera's status
-    #         status = self.camera.status()
-    #         camera.summary = status['summary']
-
-    #         # extend existing status if possible
-    #         if camera.status != '':
-    #             # allows us to retain knowledge of settings when powered off
-    #             try:
-    #                 old_status = json.loads(camera.status)
-    #                 if old_status != '':
-    #                     old_status.update(status)
-    #                     status = old_status
-    #             except ValueError:
-    #                 logging.info('{}{} - existing status malformed{}'.format(
-    #                     Fore.YELLOW, 'GoProProxy.getStatus()', Fore.RESET))
-
-    #         # save status to camera
-    #         camera.status = json.dumps(status)
-
-    #         # grab snapshot when the camera is powered on
-    #         if self.snapshots is True and 'power' in status \
-    #                 and status['power'] == 'on':
-    #             camera.save()
-    #             image = self.camera.image()
-    #             if image is not False:
-    #                 camera.image = image
-    #                 camera.image_last_update = camera.last_attempt
-    #     else:
-    #         # update counters
-    #         self.updateCounters(camera, False)
-
-    #         # update status
-    #         camera.summary = 'notfound'
-
-    #     # save result
-    #     camera.save()
-
-    # def shouldBeOn(self, command):
-    #     return command.command != 'power' or command.value != 'sleep'
-
-    # def updateCounters(self, camera, success):
-    #     camera.connection_attempts += 1
-    #     if success is not True:
-    #         camera.connection_failures += 1
-
     # spam the command
     def spam(self):
         if self.param is not 'status':
-            logging.info('time for spam')
+            queued_commands = Command.objects.filter(
+                time_completed__isnull=True,
+                camera__ssid__exact=self.wireless.current())
+
+            # only add another round of commands if command queue is empty
+            if len(command_set) == 0:
+                logging.info('{}{} {}={}{}'.format(
+                    Fore.CYAN,
+                    'Empty command queue; spamming',
+                    self.param,
+                    self.value,
+                    Fore.RESET))
+                cameras = Camera.objects.all()
+                for camera in cameras:
+                    # create a command just for this camera
+                    command = Command(
+                        camera=camera, command=self.param, value=self.value)
+                    command.save()
 
     # report status of all cameras
     def getStatus(self):
@@ -178,9 +98,23 @@ class GoProSpammer:
     def printStatus(self):
         # color statuses
         colored_status = copy.deepcopy(self.status)
+        for ssid, status in colored_status.iter_items():
+            color = None
+
+            if status == 'record':
+                color = Fore.RED
+            elif status == 'on':
+                color = Fore.GREEN
+            elif status == 'sleeping':
+                color = Fore.YELLOW
+            else:
+                color = Fore.RESET
+
+            colored_status[ssid] = '{}{}{}'.format(
+                color, status, Fore.RESET)
 
         # now print
-        print 'Status: {}'.format(colored_status.join(','))
+        logging.info('Status: {}'.format(colored_status.join(',')))
 
     # report status of all cameras
     def status(self):
