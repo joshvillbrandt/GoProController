@@ -9,6 +9,7 @@ import argparse
 import django
 import logging
 import copy
+import json
 import time
 import sys
 import os
@@ -24,7 +25,7 @@ from GoProController.models import Camera, Command
 # make sure the cameras are always in the state we want them in
 class GoProSpammer:
     maxRetries = 3
-    status = None
+    statuses = None
 
     # init
     def __init__(self, log_level=logging.INFO):
@@ -60,13 +61,13 @@ class GoProSpammer:
 
     # spam the command
     def spam(self):
-        if self.param is not 'status':
+        logging.info('spam check')
+        if self.param is not None and self.param is not 'status':
             queued_commands = Command.objects.filter(
-                time_completed__isnull=True,
-                camera__ssid__exact=self.wireless.current())
+                time_completed__isnull=True)
 
             # only add another round of commands if command queue is empty
-            if len(command_set) == 0:
+            if len(queued_commands) == 0:
                 logging.info('{}{} {}={}{}'.format(
                     Fore.CYAN,
                     'Empty command queue; spamming',
@@ -82,23 +83,27 @@ class GoProSpammer:
 
     # report status of all cameras
     def getStatus(self):
-        status = {}
+        statuses = {}
         # get status of all cameras
         cameras = Camera.objects.all()
         for camera in cameras:
             # we only care about power and record here
-            if power in camera.status and camera.status['power'] == 'on':
-                pass
+            status = json.loads(camera.status)
+            if 'power' in status:
+                if 'record' in status and status['record'] == 'on':
+                    statuses[camera.ssid] = 'record'
+                else:
+                    statuses[camera.ssid] = status['power']
             else:
-                status[camera.ssid] = 'off'
+                statuses[camera.ssid] = 'off'
 
-        return status
+        return statuses
 
     # report status of all cameras
     def printStatus(self):
         # color statuses
-        colored_status = copy.deepcopy(self.status)
-        for ssid, status in colored_status.iter_items():
+        colored = []
+        for ssid, status in self.statuses.iteritems():
             color = None
 
             if status == 'record':
@@ -110,20 +115,20 @@ class GoProSpammer:
             else:
                 color = Fore.RESET
 
-            colored_status[ssid] = '{}{}{}'.format(
-                color, status, Fore.RESET)
+            colored.append('{}{}{}'.format(
+                color, ssid, Fore.RESET))
 
         # now print
-        logging.info('Status: {}'.format(colored_status.join(',')))
+        logging.info('Status: {}'.format(', '.join(colored)))
 
     # report status of all cameras
     def status(self):
         # get status
-        status = self.getStatus()
+        statuses = self.getStatus()
 
         # print if different
-        if status != self.status:
-            self.status = status
+        if statuses != self.statuses:
+            self.statuses = statuses
             self.printStatus()
 
     # main loop
@@ -136,7 +141,6 @@ class GoProSpammer:
         while 'people' != 'on Mars':
             # check if we should run the spammer now or not
             now = time.time()
-            print(now, last)
             if last is None or (now - last) > self.interval:
                 last = now
                 self.spam()
