@@ -5,7 +5,7 @@ cd /home/GoProController
 
 echo "Installing packages..."
 apt-get update
-apt-get install -y python python-dev python-pip
+apt-get install -y python python-dev python-pip wpasupplicant
 # apt-get install -y network-manager --no-install-recommends
 pip install -r requirements.txt
 

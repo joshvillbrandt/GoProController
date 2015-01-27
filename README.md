@@ -95,7 +95,7 @@ The API if build on the [Django REST Framework](http://www.django-rest-framework
 
 This project uses [semantic versioning](http://semver.org/).
 
-### v0.2.4 - future
+### v0.2.4 - 2015/01/26
 
 * Add `GOPRO_SNAPSHOTS` environment flag to turn off grabbing snapshots images if desired
 * The proxy now fails commands when it can't find the camera instead of leaving them in the queue to block everybody else

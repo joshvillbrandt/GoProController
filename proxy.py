@@ -82,9 +82,14 @@ class GoProProxy:
             while i < self.maxRetries and result is False:
                 result = self.camera.command(command.command, command.value)
                 i += 1
+        else:
+            # mini-status update if we couldn't connect
+            command.camera.last_attempt = timezone.now()
+            command.camera.summary = 'notfound'
 
         # did we successfully talk to the camera?
         self.updateCounters(command.camera, result)
+        command.camera.save()
 
         # save result
         command.time_completed = timezone.now()
