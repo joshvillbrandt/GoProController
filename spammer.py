@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# force.py
+# spammer.py
 # Josh Villbrandt <josh@javconcepts.com>
 # 2015/01/26
 
@@ -8,11 +8,11 @@
 import argparse
 import django
 import logging
-import copy
 import time
 import sys
 import os
 from colorama import Fore
+from django.utils import timezone
 
 # import django models
 sys.path.append('/home/GoProController')
@@ -23,7 +23,6 @@ from GoProController.models import Camera, Command
 
 # make sure the cameras are always in the state we want them in
 class GoProSpammer:
-    maxRetries = 3
     statuses = None
 
     # init
@@ -141,6 +140,17 @@ class GoProSpammer:
             self.statuses = statuses
             self.printStatus()
 
+    # clear queued commands
+    def clearCommands(self):
+        # get queued commands
+        queued_commands = Command.objects.filter(
+            time_completed__isnull=True)
+
+        # forcibly set time_complete even though we aren't attempting to send
+        for command in queued_commands:
+            command.time_complete = timezone.now()
+            command.save()
+
     # main loop
     def run(self):
         logging.info('{}GoProSpammer.run(){}'.format(Fore.CYAN, Fore.RESET))
@@ -152,6 +162,9 @@ class GoProSpammer:
             Fore.GREEN, 'on',
             Fore.RED, 'recording',
             Fore.RESET, 'notfound'))
+
+        # we want our commands to go right away; clear queued commands
+        self.clearCommands()
 
         # keep running until we land on Mars
         last = None
