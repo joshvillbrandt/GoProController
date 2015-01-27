@@ -139,9 +139,6 @@ class GoProProxy:
         # save result
         camera.save()
 
-    def shouldBeOn(self, command):
-        return command.command != 'power' or command.value != 'sleep'
-
     def updateCounters(self, camera, success):
         camera.connection_attempts += 1
         if success is not True:
@@ -158,29 +155,34 @@ class GoProProxy:
         # keep the contents of this loop short (limit to one cmd/status or one
         # status) so that we can quickly catch KeyboardInterrupt, SystemExit
         while 'people' != 'on Mars':
+
             # PRIORITY 1: send command for the current network on if possible
-            command_set = Command.objects.filter(
+            commands = Command.objects.filter(
                 time_completed__isnull=True,
                 camera__ssid__exact=self.wireless.current())
-            if len(command_set) > 0:
-                self.sendCommand(command_set[0])
-                if self.shouldBeOn(command_set[0]):
-                    # get the status now because it is cheap
-                    self.getStatus(command_set[0].camera)
+            if len(commands) > 0:
+                self.sendCommand(commands[0])
+
+                # get the status now because it is cheap
+                if self.wireless.current() == commands[0].camera.ssid:
+                    self.getStatus(commands[0].camera)
+
+            # PRIORITY 2: send the oldest command still in the queue
             else:
-                # PRIORITY 2: send the oldest command still in the queue
-                command_set = Command.objects.filter(
+                commands = Command.objects.filter(
                     time_completed__isnull=True).order_by('-date_added')
-                if len(command_set) > 0:
-                    self.sendCommand(command_set[0])
-                    if self.shouldBeOn(command_set[0]):
-                        # get the status now because it is cheap
-                        self.getStatus(command_set[0].camera)
+                if len(commands) > 0:
+                    self.sendCommand(commands[0])
+
+                    # get the status now because it is cheap
+                    if self.wireless.current() == commands[0].camera.ssid:
+                        self.getStatus(commands[0].camera)
+
+                # PRIORITY 3: check status of the most stale camera
                 else:
-                    # PRIORITY 3: check status of the most stale camera
-                    camera_set = Camera.objects.all().order_by('last_attempt')
-                    if len(camera_set) > 0:
-                        self.getStatus(camera_set[0])
+                    cameras = Camera.objects.all().order_by('last_attempt')
+                    if len(cameras) > 0:
+                        self.getStatus(cameras[0])
 
             # protect the cpu in the event that there was nothing to do
             time.sleep(0.1)
