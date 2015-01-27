@@ -99,6 +99,7 @@ This project uses [semantic versioning](http://semver.org/).
 
 * Add `GOPRO_SNAPSHOTS` environment flag to turn off grabbing snapshots images if desired
 * The proxy now fails commands when it can't find the camera instead of leaving them in the queue to block everybody else
+* Add [spammer.py](spammer.py); try `sudo python spammer.py -p record -v on`
 
 ### v0.2.3 - 2015/01/14
 

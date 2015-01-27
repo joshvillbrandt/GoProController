@@ -143,8 +143,15 @@ class GoProSpammer:
 
     # main loop
     def run(self):
-        logging.info('{}GoProSpammer.run(){}'.format(Fore.GREEN, Fore.RESET))
-        logging.info('Interval: {}s'.format(self.interval))
+        logging.info('{}GoProSpammer.run(){}'.format(Fore.CYAN, Fore.RESET))
+        logging.info('{}Update interval: {}s{}'.format(
+            Fore.CYAN, self.interval, Fore.RESET))
+        logging.info('{}Status meanings: {}{}, {}{}, {}{}, {}{}'.format(
+            Fore.CYAN,
+            Fore.YELLOW, 'sleeping',
+            Fore.GREEN, 'on',
+            Fore.RED, 'recording',
+            Fore.RESET, 'notfound'))
 
         # keep running until we land on Mars
         last = None
