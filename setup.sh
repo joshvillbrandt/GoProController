@@ -7,7 +7,7 @@ echo "Installing packages..."
 apt-get update
 apt-get install -y python python-dev python-pip wpasupplicant
 # apt-get install -y network-manager --no-install-recommends
-pip install -r requirements.txt
+python setup.py install
 
 echo "Configuring Django..."
 key=$(tr -dc "[:alpha:]" < /dev/urandom | head -c 48)

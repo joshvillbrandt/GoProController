@@ -1,7 +1,0 @@
-goprohero==0.2.6
-wireless==0.3.0
-django==1.7.1
-djangorestframework
-django-cors-headers
-python-dateutil
-colorama
