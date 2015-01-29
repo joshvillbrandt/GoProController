@@ -60,7 +60,7 @@ To run GoProApp without Apache and Upstart, launch the site with the Django deve
 ```bash
 git clone https://github.com/joshvillbrandt/GoProController.git ~/GoProController
 cd ~/GoProController
-pip install -r requirements.txt
+sudo python setup.py install
 python manage.py runserver 0.0.0.0:8000
 ```
 
@@ -95,12 +95,12 @@ The API if build on the [Django REST Framework](http://www.django-rest-framework
 
 This project uses [semantic versioning](http://semver.org/).
 
-### v0.2.4 - 2015/01/27
+### v0.2.4 - 2015/01/29
 
 * Added `GOPRO_SNAPSHOTS` environment flag to turn off grabbing snapshots images if desired
 * The proxy now fails commands when it can't find the camera instead of leaving them in the queue to block everybody else
-* Added [spammer.py](spammer.py) - try `sudo python spammer.py -p record -v on`
-* Added [logger.py](logger.py) - try `python logger.py -d output`
+* Added [spammer.py](spammer.py) - try `sudo goprospammer -p record -v on`
+* Added [logger.py](logger.py) - try `goprologger -d output`
 
 ### v0.2.3 - 2015/01/14
 
