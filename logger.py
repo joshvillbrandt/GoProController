@@ -86,16 +86,19 @@ class GoProLogger:
 
     # get fields for logging
     def getFields(self, camera):
-        delta = camera.last_update - self.startTime
-        fields = [delta.total_seconds(), self.summaryMap[camera.summary]]
+        fields = []
 
-        if camera.summary == 'on' or camera.summary == 'recording':
-            status = json.loads(camera.status)
-            fields = fields + [
-                status['batt1'], status['batt2'],
-                int(status['batt1']) + int(status['batt2'])]
-        else:
-            fields = fields + [0, 0, 0]
+        if camera.last_update is not None:
+            delta = camera.last_update - self.startTime
+            fields = [delta.total_seconds(), self.summaryMap[camera.summary]]
+
+            if camera.summary == 'on' or camera.summary == 'recording':
+                status = json.loads(camera.status)
+                fields.append(status['batt1'])
+                fields.append(status['batt2'])
+                fields.append(int(status['batt1']) + int(status['batt2']))
+            else:
+                fields = fields + [0, 0, 0]
 
         return fields
 
@@ -104,13 +107,14 @@ class GoProLogger:
         if verbose:
             logging.info('{}: {}'.format(filename, fields))
 
-        str_fields = []
-        for field in fields:
-            str_fields.append(str(field))
+        if len(fields) > 0:
+            str_fields = []
+            for field in fields:
+                str_fields.append(str(field))
 
-        with open(filename, "a") as f:
-            f.write(','.join(str_fields))
-            f.write(os.linesep)
+            with open(filename, "a") as f:
+                f.write(','.join(str_fields))
+                f.write(os.linesep)
 
     # main loop
     def run(self):

@@ -148,7 +148,7 @@ class GoProSpammer:
 
         # forcibly set time_complete even though we aren't attempting to send
         for command in queued_commands:
-            command.time_complete = timezone.now()
+            command.time_completed = timezone.now()
             command.save()
 
     # main loop
@@ -156,12 +156,15 @@ class GoProSpammer:
         logging.info('{}GoProSpammer.run(){}'.format(Fore.CYAN, Fore.RESET))
         logging.info('{}Update interval: {}s{}'.format(
             Fore.CYAN, self.interval, Fore.RESET))
+        logging.info('{}Command: {}={}{}'.format(
+            Fore.CYAN, self.param, self.value, Fore.RESET))
         logging.info('{}Status meanings: {}{}, {}{}, {}{}, {}{}'.format(
             Fore.CYAN,
             Fore.YELLOW, 'sleeping',
             Fore.GREEN, 'on',
             Fore.RED, 'recording',
             Fore.RESET, 'notfound'))
+        logging.info('')
 
         # we want our commands to go right away; clear queued commands
         self.clearCommands()
