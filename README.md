@@ -10,7 +10,7 @@ A user interface is available for this API as a standalone package. See [GoProCo
 
 ## How it works
 
-The backbone of GoProApp is a program called `GoProProxy` that runs asynchronously to the server. This proxy periodically grabs the status of every camera in the database and sends commands to cameras when appropriate. The proxy uses [wifi](https://github.com/rockymeza/wifi) to jump between networks and [goprohero](https://github.com/joshvillbrandt/goprohero) to handle the communication to the cameras. A Django app is used to persist data from the proxy and serve API endpoints.
+The backbone of GoProApp is a program called `GoProProxy` that runs asynchronously to the server. This proxy periodically grabs the status of every camera in the database and sends commands to cameras when appropriate. The proxy uses [wireless](https://github.com/joshvillbrandt/wireless) to jump between networks and [goprohero](https://github.com/joshvillbrandt/goprohero) to handle the communication to the cameras. A Django app is used to persist data from the proxy and serve API endpoints.
 
 ![diagram](diagram.png)
 
