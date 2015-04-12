@@ -21,6 +21,7 @@ python manage.py collectstatic --noinput # for the Django REST framework
 
 echo "Configuring Apache..."
 apt-get install -y apache2 libapache2-mod-wsgi
+sudo a2enmod version
 rm /etc/apache2/sites-enabled/000-default*
 ln -s /home/GoProController/apache.conf /etc/apache2/sites-enabled/GoProController.conf
 a2enmod wsgi
