@@ -24,6 +24,7 @@ apt-get install -y apache2 libapache2-mod-wsgi
 rm /etc/apache2/sites-enabled/000-default*
 ln -s /home/GoProController/apache.conf /etc/apache2/sites-enabled/GoProController.conf
 a2enmod wsgi
+a2enmod version
 service apache2 restart
 PYTHON_EGG_CACHE='/var/www/.python-eggs'
 mkdir $PYTHON_EGG_CACHE
